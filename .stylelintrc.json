@@ -8,6 +8,7 @@
       }
     ],
     "custom-property-pattern": null,
+    "import-notation": "string",
     "no-duplicate-selectors": null
   }
 }

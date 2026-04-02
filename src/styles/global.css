@@ -1,5 +1,5 @@
-@import url('tailwindcss');
-@import url('./tokens.css');
+@import 'tailwindcss';
+@import './tokens.css';
 
 @theme inline {
   --color-background: var(--color-background);
