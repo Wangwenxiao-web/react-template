@@ -1,0 +1,54 @@
+@layer base {
+  :root {
+    /* 基础色 */
+    --color-background: hsl(0deg 0% 100%);
+    --color-foreground: hsl(240deg 10% 3.9%);
+
+    /* 卡片 */
+    --color-card: hsl(0deg 0% 100%);
+    --color-card-foreground: hsl(240deg 10% 3.9%);
+
+    /* 主色 */
+    --color-primary: hsl(240deg 5.9% 10%);
+    --color-primary-foreground: hsl(0deg 0% 98%);
+
+    /* 次色 */
+    --color-secondary: hsl(240deg 4.8% 95.9%);
+    --color-secondary-foreground: hsl(240deg 5.9% 10%);
+
+    /* 静音色 */
+    --color-muted: hsl(240deg 4.8% 95.9%);
+    --color-muted-foreground: hsl(240deg 3.8% 46.1%);
+
+    /* 强调色 */
+    --color-accent: hsl(240deg 4.8% 95.9%);
+    --color-accent-foreground: hsl(240deg 5.9% 10%);
+
+    /* 边框 / 输入框 / 聚焦环 */
+    --color-border: hsl(240deg 5.9% 90%);
+    --color-input: hsl(240deg 5.9% 90%);
+    --color-ring: hsl(240deg 5.9% 10%);
+
+    /* 侧边栏 */
+    --color-sidebar: hsl(240deg 5.9% 10%);
+    --color-sidebar-foreground: hsl(0deg 0% 98%);
+    --color-sidebar-muted: hsl(240deg 3.7% 20%);
+    --color-sidebar-muted-foreground: hsl(240deg 5% 64.9%);
+    --color-sidebar-border: hsl(240deg 3.7% 18%);
+    --color-sidebar-accent: hsl(240deg 3.7% 18%);
+
+    /* 功能色 */
+    --color-success: hsl(142deg 76% 36%);
+    --color-success-bg: hsl(142deg 76% 94%);
+    --color-success-foreground: hsl(142deg 76% 28%);
+    --color-warning: hsl(38deg 92% 50%);
+    --color-warning-bg: hsl(38deg 92% 95%);
+    --color-warning-foreground: hsl(38deg 92% 35%);
+    --color-danger: hsl(0deg 72.2% 50.6%);
+    --color-danger-bg: hsl(0deg 72.2% 95%);
+    --color-danger-foreground: hsl(0deg 72.2% 40%);
+    --color-info: hsl(217deg 91% 60%);
+    --color-info-bg: hsl(217deg 91% 95%);
+    --color-info-foreground: hsl(217deg 91% 38%);
+  }
+}

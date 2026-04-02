@@ -1,0 +1,52 @@
+@import url('tailwindcss');
+@import url('./tokens.css');
+
+@theme inline {
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+  --color-card: var(--color-card);
+  --color-card-foreground: var(--color-card-foreground);
+  --color-primary: var(--color-primary);
+  --color-primary-foreground: var(--color-primary-foreground);
+  --color-secondary: var(--color-secondary);
+  --color-secondary-foreground: var(--color-secondary-foreground);
+  --color-muted: var(--color-muted);
+  --color-muted-foreground: var(--color-muted-foreground);
+  --color-accent: var(--color-accent);
+  --color-accent-foreground: var(--color-accent-foreground);
+  --color-border: var(--color-border);
+  --color-input: var(--color-input);
+  --color-ring: var(--color-ring);
+  --color-sidebar: var(--color-sidebar);
+  --color-sidebar-foreground: var(--color-sidebar-foreground);
+  --color-sidebar-muted: var(--color-sidebar-muted);
+  --color-sidebar-muted-foreground: var(--color-sidebar-muted-foreground);
+  --color-sidebar-border: var(--color-sidebar-border);
+  --color-sidebar-accent: var(--color-sidebar-accent);
+  --color-success: var(--color-success);
+  --color-success-bg: var(--color-success-bg);
+  --color-success-foreground: var(--color-success-foreground);
+  --color-warning: var(--color-warning);
+  --color-warning-bg: var(--color-warning-bg);
+  --color-warning-foreground: var(--color-warning-foreground);
+  --color-danger: var(--color-danger);
+  --color-danger-bg: var(--color-danger-bg);
+  --color-danger-foreground: var(--color-danger-foreground);
+  --color-info: var(--color-info);
+  --color-info-bg: var(--color-info-bg);
+  --color-info-foreground: var(--color-info-foreground);
+  --font-sans: 'Inter', 'Noto Sans SC', ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+  }
+}

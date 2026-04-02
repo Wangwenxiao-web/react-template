@@ -1,0 +1,13 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "rules": {
+    "at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": ["theme", "tailwind", "utility", "variant", "custom-variant", "source"]
+      }
+    ],
+    "custom-property-pattern": null,
+    "no-duplicate-selectors": null
+  }
+}
