@@ -72,14 +72,14 @@ export default function AntdColorSystemView() {
               <Alert
                 showIcon
                 type="info"
-                message="Info Alert"
+                title="Info Alert"
                 description="浅背景和语义色都来自样式 tokens 分层，而不是在 antd 内重复定义。"
               />
             </Space>
           </Card>
 
           <Card title="接入原则" variant="outlined">
-            <Space direction="vertical" size={12} style={{ display: 'flex' }}>
+            <Space orientation="vertical" size={12} style={{ display: 'flex' }}>
               <Typography.Text strong>1. CSS 变量是唯一颜色源</Typography.Text>
               <Typography.Text type="secondary">
                 antd 只消费你的 token，不再反向定义品牌色。
