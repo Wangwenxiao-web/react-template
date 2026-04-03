@@ -73,7 +73,7 @@ export default function AntdColorSystemView() {
                 showIcon
                 type="info"
                 message="Info Alert"
-                description="浅背景和语义色都来自 tokens.css，而不是在 antd 内重复定义。"
+                description="浅背景和语义色都来自样式 tokens 分层，而不是在 antd 内重复定义。"
               />
             </Space>
           </Card>

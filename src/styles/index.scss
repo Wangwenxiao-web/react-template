@@ -1,0 +1,20 @@
+@layer base {
+  * {
+    box-sizing: border-box;
+    border-color: var(--color-border);
+
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+
+    @apply bg-background text-foreground;
+  }
+}

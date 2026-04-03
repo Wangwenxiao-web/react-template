@@ -2,7 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
-import '@/styles/global.css'
+import '@/styles/vendors.css'
 
 import { routes } from '@/router'
 
