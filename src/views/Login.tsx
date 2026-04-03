@@ -1,10 +1,13 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+import { Eye, EyeOff, Sparkles } from 'lucide-react'
+
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Eye, EyeOff, Sparkles } from 'lucide-react'
 
 interface PupilProps {
   size?: number
@@ -169,8 +172,10 @@ const EyeBall = ({
 }
 
 function LoginPage() {
+  const nav = useNavigate()
+
   const [showPassword, setShowPassword] = useState(false)
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -306,15 +311,16 @@ function LoginPage() {
     await new Promise((resolve) => setTimeout(resolve, 300))
 
     // Mock authentication - validate against dummy credentials
-    if (email === 'erik@gmail.com' && password === '1234') {
+    if (username === 'erik' && password === '1234') {
       console.log('✅ Login successful!')
-      alert('Login successful! Welcome, Erik!')
+      nav('/')
+
       // In a real app, you would:
       // - Store auth token
       // - Redirect to dashboard
       // - Set user session
     } else {
-      setError('Invalid email or password. Please try again.')
+      setError('Invalid username or password. Please try again.')
       console.log('❌ Login failed')
     }
 
@@ -615,17 +621,7 @@ function LoginPage() {
           </div>
         </div>
 
-        <div className="text-primary-foreground/60 relative z-20 flex items-center gap-8 text-sm">
-          <a href="#" className="hover:text-primary-foreground transition-colors">
-            Privacy Policy
-          </a>
-          <a href="#" className="hover:text-primary-foreground transition-colors">
-            Terms of Service
-          </a>
-          <a href="#" className="hover:text-primary-foreground transition-colors">
-            Contact
-          </a>
-        </div>
+        <div className="text-primary-foreground/60 relative z-20 flex items-center gap-8 text-sm" />
 
         {/* Decorative elements */}
         <div className="bg-grid-white/[0.05] absolute inset-0 bg-size-[20px_20px]" />
@@ -645,24 +641,24 @@ function LoginPage() {
           </div>
 
           {/* Header */}
-          <div className="mb-10 text-center">
-            <h1 className="mb-2 text-3xl font-bold tracking-tight">Welcome back!</h1>
-            <p className="text-muted-foreground text-sm">Please enter your details</p>
+          <div className="mb-4 text-center">
+            <h1 className="mb-2 text-3xl font-bold tracking-tight">欢迎回来</h1>
+            <p className="text-muted-foreground text-sm">请输入您的信息</p>
           </div>
 
           {/* Login Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium">
-                Email
+              <Label htmlFor="username" className="text-sm font-medium">
+                用户名
               </Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="anna@gmail.com"
-                value={email}
+                id="username"
+                type="text"
+                placeholder="请输入用户名"
+                value={username}
                 autoComplete="off"
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => setUsername(e.target.value)}
                 onFocus={() => setIsTyping(true)}
                 onBlur={() => setIsTyping(false)}
                 required
@@ -672,7 +668,7 @@ function LoginPage() {
 
             <div className="space-y-2">
               <Label htmlFor="password" className="text-sm font-medium">
-                Password
+                密码
               </Label>
               <div className="relative">
                 <Input
@@ -695,7 +691,7 @@ function LoginPage() {
             </div>
 
             {error && (
-              <div className="rounded-lg border border-red-900/30 bg-red-950/20 p-3 text-sm text-red-400">
+              <div className="bg-danger-bg text-danger rounded-lg border border-red-900/30 p-3 text-sm">
                 {error}
               </div>
             )}
@@ -706,7 +702,7 @@ function LoginPage() {
               size="lg"
               disabled={isLoading}
             >
-              {isLoading ? 'Signing in...' : 'Log in'}
+              {isLoading ? '正在登录...' : '登录'}
             </Button>
           </form>
         </div>
