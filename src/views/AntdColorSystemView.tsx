@@ -1,25 +1,5 @@
-import type { ThemeConfig } from 'antd'
 import { Alert, Button, Card, ConfigProvider, Input, Space, Tag, Typography } from 'antd'
-
-type SemanticColorToken =
-  | 'background'
-  | 'foreground'
-  | 'card'
-  | 'card-foreground'
-  | 'primary'
-  | 'primary-foreground'
-  | 'muted'
-  | 'muted-foreground'
-  | 'border'
-  | 'ring'
-  | 'success'
-  | 'success-bg'
-  | 'warning'
-  | 'warning-bg'
-  | 'danger'
-  | 'danger-bg'
-  | 'info'
-  | 'info-bg'
+import { useAntdTheme, type SemanticColorToken } from '@/hooks/index'
 
 interface MappingRowProps {
   semanticToken: SemanticColorToken
@@ -39,82 +19,6 @@ const ANTD_TOKEN_MAPPING = [
   ['info', 'colorInfo'],
 ] as const satisfies readonly [SemanticColorToken, string][]
 
-function readCssColor(token: SemanticColorToken): string {
-  return getComputedStyle(document.documentElement).getPropertyValue(`--color-${token}`).trim()
-}
-
-function createAntdTheme(): ThemeConfig {
-  const background = readCssColor('background')
-  const foreground = readCssColor('foreground')
-  const card = readCssColor('card')
-  const cardForeground = readCssColor('card-foreground')
-  const primary = readCssColor('primary')
-  const primaryForeground = readCssColor('primary-foreground')
-  const muted = readCssColor('muted')
-  const mutedForeground = readCssColor('muted-foreground')
-  const border = readCssColor('border')
-  const ring = readCssColor('ring')
-  const success = readCssColor('success')
-  const successBg = readCssColor('success-bg')
-  const warning = readCssColor('warning')
-  const warningBg = readCssColor('warning-bg')
-  const danger = readCssColor('danger')
-  const dangerBg = readCssColor('danger-bg')
-  const info = readCssColor('info')
-  const infoBg = readCssColor('info-bg')
-
-  return {
-    token: {
-      colorPrimary: primary,
-      colorSuccess: success,
-      colorWarning: warning,
-      colorError: danger,
-      colorInfo: info,
-      colorLink: primary,
-      colorBgBase: background,
-      colorBgLayout: background,
-      colorBgContainer: card,
-      colorText: foreground,
-      colorTextBase: foreground,
-      colorTextSecondary: mutedForeground,
-      colorBorder: border,
-      colorBorderSecondary: border,
-      colorFillSecondary: muted,
-      colorFillTertiary: muted,
-      colorSuccessBg: successBg,
-      colorWarningBg: warningBg,
-      colorErrorBg: dangerBg,
-      colorInfoBg: infoBg,
-      colorTextLightSolid: primaryForeground,
-      controlOutline: ring,
-      fontFamily: 'var(--font-sans)',
-      borderRadius: 12,
-      boxShadow: 'none',
-    },
-    components: {
-      Button: {
-        defaultBorderColor: border,
-        defaultColor: cardForeground,
-        defaultBg: card,
-        primaryShadow: 'none',
-        dangerShadow: 'none',
-      },
-      Card: {
-        colorBgContainer: card,
-        colorTextHeading: foreground,
-        colorTextDescription: mutedForeground,
-      },
-      Input: {
-        activeBorderColor: primary,
-        hoverBorderColor: primary,
-      },
-      Alert: {
-        withDescriptionPadding: 16,
-      },
-    },
-  }
-}
-
 function MappingRow({ semanticToken, antdToken }: MappingRowProps) {
   return (
     <div className="border-border bg-card flex items-center justify-between rounded-xl border px-4 py-3">
@@ -131,7 +35,7 @@ function MappingRow({ semanticToken, antdToken }: MappingRowProps) {
 }
 
 export default function AntdColorSystemView() {
-  const theme = createAntdTheme()
+  const theme = useAntdTheme()
 
   return (
     <ConfigProvider theme={theme}>
