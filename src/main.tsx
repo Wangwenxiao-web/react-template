@@ -1,14 +1,18 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import 'antd/dist/reset.css'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+
 import '@/styles/global.css'
-import App from './App'
+
+import { routes } from '@/router'
+
+const router = createBrowserRouter(routes)
 
 const root = document.getElementById('root')
 if (!root) throw new Error('Root element not found')
 
 createRoot(root).render(
   <StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </StrictMode>,
 )
