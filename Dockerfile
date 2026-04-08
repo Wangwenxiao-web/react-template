@@ -17,6 +17,7 @@ RUN pnpm build
 
 FROM nginx:1.29-alpine AS runner
 
+COPY .nginx/web.config /etc/nginx/conf.d/default.conf
 COPY --from=builder /app/dist /usr/share/nginx/html
 
 EXPOSE 80
