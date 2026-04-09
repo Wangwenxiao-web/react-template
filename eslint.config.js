@@ -10,7 +10,7 @@ export default defineConfig([
   globalIgnores(['dist']),
   {
     files: ['**/*.{ts,tsx}'],
-    ignores: ['src/components/ui/*.{ts,tsx}', 'src/views/Auth/Login.tsx'],
+    ignores: ['src/views/Auth/Login.tsx'],
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
