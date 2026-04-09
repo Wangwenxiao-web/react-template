@@ -39,8 +39,8 @@ const navItemClass = (isActive: boolean) =>
   cn(
     'flex items-center gap-3 px-2 py-2 rounded-md cursor-pointer transition-colors duration-150',
     isActive
-      ? 'bg-[hsl(240,3.7%,18%)] text-[hsl(0,0%,98%)]'
-      : 'text-[hsl(240,5%,64.9%)] hover:bg-[hsl(240,3.7%,16%)] hover:text-[hsl(0,0%,92%)]',
+      ? 'bg-sidebar-accent text-primary-foreground'
+      : 'text-sidebar-muted-foreground hover:bg-sidebar-hover hover:text-primary-foreground',
   )
 
 interface CustomMenuProps {
