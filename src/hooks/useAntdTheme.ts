@@ -11,6 +11,7 @@ export type SemanticColorToken =
   | 'muted-foreground'
   | 'border'
   | 'ring'
+  | 'sidebar-hover'
   | 'success'
   | 'success-bg'
   | 'warning'
@@ -35,6 +36,7 @@ export function useAntdTheme(): ThemeConfig {
   const mutedForeground = readCssColor('muted-foreground')
   const border = readCssColor('border')
   const ring = readCssColor('ring')
+  const sidebarHover = readCssColor('sidebar-hover')
   const success = readCssColor('success')
   const successBg = readCssColor('success-bg')
   const warning = readCssColor('warning')
@@ -92,6 +94,12 @@ export function useAntdTheme(): ThemeConfig {
       },
       Alert: {
         withDescriptionPadding: 16,
+      },
+      Menu: {
+        darkPopupBg: primary,
+        darkItemBg: primary,
+        darkSubMenuItemBg: primary,
+        darkItemHoverBg: sidebarHover,
       },
     },
   }

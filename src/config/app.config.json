@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "layout": {
+    "sidebar": {
+      "menu": {
+        "implementation": "antd"
+      },
+      "icon": {
+        "provider": "lucide"
+      }
+    }
+  },
+  "features": {},
+  "experimental": {}
+}

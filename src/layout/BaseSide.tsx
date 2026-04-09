@@ -1,16 +1,25 @@
 import type { JSX } from 'react'
 
 import BrandTitle from './components/BrandTitle'
-import CustomMenu from '@/layout/components/CustomMenu'
+import AntdMenu from './components/AntdMenu'
+import CustomMenu from './components/CustomMenu'
+import { appConfig } from '@/config/app.config'
+
+const MENU_VIEW = {
+  antd: AntdMenu,
+  custom: CustomMenu,
+}
 
 function BaseSide(): JSX.Element {
+  const MenuComponent = MENU_VIEW[appConfig.layout.sidebar.menu.implementation]
+
   return (
     <div className="bg-primary text-primary-foreground">
       <div className="border-border/30 h-16 border-b">
         <BrandTitle />
       </div>
       <aside className="flex h-full w-60 shrink-0 flex-col">
-        <CustomMenu />
+        <MenuComponent />
       </aside>
     </div>
   )
