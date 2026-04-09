@@ -1,5 +1,5 @@
 import type { JSX } from 'react'
-import brandIcon from '@/assets/coffee.png'
+import brandIcon from '@/assets/images/coffee.png'
 
 function BrandTitle(): JSX.Element {
   return (
