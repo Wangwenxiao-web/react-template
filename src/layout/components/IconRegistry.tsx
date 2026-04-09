@@ -13,8 +13,8 @@ import {
 } from 'lucide-react'
 
 import { appConfig } from '@/config/app.config'
-import type { IconProvider } from '@/config/app.config'
 import { cn } from '@/lib/utils'
+import type { IconProvider } from '@/types'
 
 const LUCIDE_ICON_MAP = {
   'fa-calendar': Calendar,

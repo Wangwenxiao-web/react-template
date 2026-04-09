@@ -1,9 +1,10 @@
 import type { JSX } from 'react'
 
+import { appConfig } from '@/config/app.config'
+
 import BrandTitle from './components/BrandTitle'
 import AntdMenu from './components/AntdMenu'
 import CustomMenu from './components/CustomMenu'
-import { appConfig } from '@/config/app.config'
 
 const MENU_VIEW = {
   antd: AntdMenu,
