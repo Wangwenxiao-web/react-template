@@ -15,11 +15,11 @@ function BaseSide(): JSX.Element {
   const MenuComponent = MENU_VIEW[appConfig.layout.sidebar.menu.implementation]
 
   return (
-    <div className="bg-primary text-primary-foreground">
-      <div className="border-border/30 h-16 border-b">
+    <div className="bg-primary text-primary-foreground flex h-full flex-col">
+      <div className="border-border/30 h-16 shrink-0 border-b">
         <BrandTitle />
       </div>
-      <aside className="flex h-full w-60 shrink-0 flex-col">
+      <aside className="flex min-h-0 w-60 flex-1 flex-col">
         <MenuComponent />
       </aside>
     </div>
