@@ -12,7 +12,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 
-import { appShellConfig } from '@/config/app.config'
+import { appConfig } from '@/config/app.config'
 import type { IconProvider } from '@/config/app.config'
 import { cn } from '@/lib/utils'
 
@@ -72,7 +72,7 @@ function renderLucideIcon(icon: string | null, options: IconClassName): JSX.Elem
 export function renderMenuIcon(
   icon: string | null,
   options: IconClassName = {},
-  provider: IconProvider = appShellConfig.layout.sidebar.icon.provider,
+  provider: IconProvider = appConfig.layout.sidebar.icon.provider,
 ): JSX.Element | null {
   if (provider === 'font-awesome') {
     return renderFontAwesomeIcon(icon, options)
