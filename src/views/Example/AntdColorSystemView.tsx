@@ -1,5 +1,5 @@
 import { Alert, Button, Card, ConfigProvider, Input, Space, Tag, Typography } from 'antd'
-import { useAntdTheme, type SemanticColorToken } from '@/hooks/index'
+import { useAntdTheme, type SemanticColorToken } from '@/hooks/useAntdTheme'
 
 interface MappingRowProps {
   semanticToken: SemanticColorToken
