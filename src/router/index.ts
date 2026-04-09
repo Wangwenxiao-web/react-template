@@ -3,8 +3,9 @@
 import { lazy, createElement, Suspense } from 'react'
 import type { RouteObject } from 'react-router-dom'
 
-const LoginPage = lazy(() => import('@/views/Login'))
-const HomePage = lazy(() => import('@/App'))
+const AppLayout = lazy(() => import('@/App'))
+const LoginPage = lazy(() => import('@/views/Auth/Login'))
+const HomePage = lazy(() => import('@/views/Home/Home'))
 
 export const routes: RouteObject[] = [
   {
@@ -14,7 +15,13 @@ export const routes: RouteObject[] = [
   },
   {
     path: '/',
-    element: createElement(Suspense, null, createElement(HomePage)),
+    element: createElement(Suspense, null, createElement(AppLayout)),
     handle: { title: '主页' },
+    children: [
+      {
+        index: true,
+        element: createElement(Suspense, null, createElement(HomePage)),
+      },
+    ],
   },
 ]

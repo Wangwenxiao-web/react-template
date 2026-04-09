@@ -1,56 +1,20 @@
-import { useState } from 'react'
-import type { ComponentType } from 'react'
+import type { JSX } from 'react'
 
-import AntdColorSystemView from '@/views/AntdColorSystemView'
-import NativeColorSystemView from '@/views/NativeColorSystemView'
+import BaseHeader from '@/layout/BaseHeader'
+import BaseMain from '@/layout/BaseMain'
+import BaseSide from '@/layout/BaseSide'
 
-type ViewKey = 'native' | 'antd'
-
-interface ViewDefinition {
-  label: string
-  component: ComponentType
-}
-
-const VIEW_REGISTRY = {
-  native: {
-    label: '原生使用',
-    component: NativeColorSystemView,
-  },
-  antd: {
-    label: 'Antd 使用',
-    component: AntdColorSystemView,
-  },
-} as const satisfies Record<ViewKey, ViewDefinition>
-
-function App() {
-  const [activeView, setActiveView] = useState<ViewKey>('native')
-  const ActiveView = VIEW_REGISTRY[activeView].component
-
+function App(): JSX.Element {
   return (
     <div className="bg-background text-foreground min-h-screen">
-      <div className="border-border bg-background/95 sticky top-0 z-10 border-b backdrop-blur">
-        <div className="mx-auto flex max-w-5xl gap-3 px-6 py-4">
-          {(Object.entries(VIEW_REGISTRY) as [ViewKey, ViewDefinition][]).map(([viewKey, view]) => {
-            const isActive = viewKey === activeView
+      <div className="flex h-screen">
+        <BaseSide />
 
-            return (
-              <div
-                key={viewKey}
-                onClick={() => setActiveView(viewKey)}
-                className={`rounded-full border px-4 py-2 text-sm transition-colors ${
-                  isActive
-                    ? 'bg-primary text-primary-foreground border-primary'
-                    : 'border-border bg-card text-card-foreground hover:bg-muted'
-                }`}
-              >
-                {view.label}
-              </div>
-            )
-          })}
+        <div className="flex min-w-0 flex-1 flex-col">
+          <BaseHeader />
+          <BaseMain />
         </div>
       </div>
-
-      <ActiveView />
     </div>
   )
 }
