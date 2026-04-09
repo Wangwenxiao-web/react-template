@@ -1,9 +1,13 @@
 import type { JSX } from 'react'
 
-import LayoutSection from '@/layout/BaseSection'
+import CustomMenu from '@/layout/components/CustomMenu'
 
 function BaseSide(): JSX.Element {
-  return <LayoutSection className="w-64 shrink-0" title="这是侧边栏" description="后续这里放菜单" />
+  return (
+    <aside className="flex h-full w-60 shrink-0 flex-col bg-[hsl(240,5.9%,10%)] text-[hsl(0,0%,98%)]">
+      <CustomMenu />
+    </aside>
+  )
 }
 
 export default BaseSide

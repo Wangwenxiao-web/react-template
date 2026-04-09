@@ -24,7 +24,7 @@ export default defineConfig([
     },
   },
   {
-    files: ['src/components/ui/**/*.{ts,tsx}'],
+    files: ['src/components/ui/**/*.{ts,tsx}'], // 组件库不需要 react-refresh 插件
     rules: {
       'react-refresh/only-export-components': 'off',
     },

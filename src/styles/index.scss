@@ -1,3 +1,16 @@
+@layer components {
+  .group-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: hsl(240 5% 45%);
+    padding: 4px 8px 4px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
+
 @layer base {
   * {
     box-sizing: border-box;

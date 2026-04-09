@@ -1,0 +1,1458 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              /* shadcn/ui 颜色系统 */
+              background: "hsl(0 0% 100%)",
+              foreground: "hsl(240 10% 3.9%)",
+              card: "hsl(0 0% 100%)",
+              "card-foreground": "hsl(240 10% 3.9%)",
+              primary: "hsl(240 5.9% 10%)",
+              "primary-foreground": "hsl(0 0% 98%)",
+              secondary: "hsl(240 4.8% 95.9%)",
+              "secondary-foreground": "hsl(240 5.9% 10%)",
+              muted: "hsl(240 4.8% 95.9%)",
+              "muted-foreground": "hsl(240 3.8% 46.1%)",
+              accent: "hsl(240 4.8% 95.9%)",
+              "accent-foreground": "hsl(240 5.9% 10%)",
+              border: "hsl(240 5.9% 90%)",
+              input: "hsl(240 5.9% 90%)",
+              ring: "hsl(240 5.9% 10%)",
+              sidebar: "hsl(240 5.9% 10%)",
+              "sidebar-foreground": "hsl(0 0% 98%)",
+              "sidebar-muted": "hsl(240 3.7% 20%)",
+              "sidebar-muted-foreground": "hsl(240 5% 64.9%)",
+              "sidebar-border": "hsl(240 3.7% 18%)",
+              "sidebar-accent": "hsl(240 3.7% 18%)",
+            },
+            fontFamily: {
+              sans: ["Inter", "Noto Sans SC", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Inter", "Noto Sans SC", sans-serif;
+        background: hsl(0 0% 100%);
+        color: hsl(240 10% 3.9%);
+      }
+
+      /* 侧边栏滚动条 */
+      .sidebar-scroll::-webkit-scrollbar {
+        width: 4px;
+      }
+      .sidebar-scroll::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .sidebar-scroll::-webkit-scrollbar-thumb {
+        background: hsl(240 3.7% 25%);
+        border-radius: 2px;
+      }
+
+      /* 主内容滚动条 */
+      .main-scroll::-webkit-scrollbar {
+        width: 6px;
+      }
+      .main-scroll::-webkit-scrollbar-track {
+        background: hsl(240 4.8% 95.9%);
+      }
+      .main-scroll::-webkit-scrollbar-thumb {
+        background: hsl(240 5.9% 80%);
+        border-radius: 3px;
+      }
+
+      /* 折叠过渡 */
+      .sidebar-collapsed .nav-label,
+      .sidebar-collapsed .nav-badge,
+      .sidebar-collapsed .group-label,
+      .sidebar-collapsed .logo-text,
+      .sidebar-collapsed .sidebar-footer-text {
+        opacity: 0;
+        width: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        transition: opacity 0.2s, width 0.2s;
+      }
+      .sidebar-collapsed {
+        width: 64px !important;
+      }
+      .sidebar-expanded {
+        width: 240px;
+      }
+
+      /* 过渡动画 */
+      #sidebar {
+        transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      #main-content {
+        transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* 通知徽标 */
+      .badge {
+        background: hsl(0 72.2% 50.6%);
+        color: white;
+        font-size: 10px;
+        font-weight: 600;
+        min-width: 16px;
+        height: 16px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 4px;
+        line-height: 1;
+      }
+
+      /* 进度条 */
+      .progress-bar {
+        height: 6px;
+        border-radius: 3px;
+        background: hsl(240 4.8% 90%);
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        border-radius: 3px;
+        background: hsl(240 5.9% 10%);
+      }
+
+      /* 折叠时的 tooltip */
+      .sidebar-collapsed .nav-item {
+        position: relative;
+      }
+      .sidebar-collapsed .nav-item:hover::after {
+        content: attr(data-label);
+        position: absolute;
+        left: calc(100% + 8px);
+        top: 50%;
+        transform: translateY(-50%);
+        background: hsl(240 5.9% 10%);
+        color: white;
+        font-size: 12px;
+        padding: 4px 8px;
+        border-radius: 6px;
+        white-space: nowrap;
+        z-index: 100;
+        pointer-events: none;
+      }
+
+      /* 图表占位 */
+      .chart-placeholder {
+        background: linear-gradient(
+          135deg,
+          hsl(240 4.8% 95.9%) 0%,
+          hsl(240 4.8% 97%) 100%
+        );
+        border: 1px dashed hsl(240 5.9% 85%);
+      }
+
+      /* 活跃菜单项 */
+      .nav-item-active {
+        background: hsl(240 3.7% 18%);
+        color: hsl(0 0% 98%) !important;
+      }
+      .nav-item-active svg {
+        color: hsl(0 0% 98%) !important;
+      }
+
+      /* 悬停菜单项 */
+      .nav-item:not(.nav-item-active):hover {
+        background: hsl(240 3.7% 16%);
+        color: hsl(0 0% 92%);
+      }
+
+      /* 状态点 */
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+    </style>
+  </head>
+  <body class="h-screen flex overflow-hidden">
+    <!-- ======================== 侧边栏 ======================== -->
+    <aside
+      id="sidebar"
+      class="sidebar-expanded flex flex-col h-full bg-[hsl(240_5.9%_10%)] text-[hsl(0_0%_98%)] flex-shrink-0"
+    >
+      <!-- Logo 区域 -->
+      <div
+        class="flex items-center gap-3 px-4 py-4 border-b border-[hsl(240_3.7%_18%)] flex-shrink-0"
+        style="height: 61px"
+      >
+        <div
+          class="w-8 h-8 rounded-lg bg-white flex items-center justify-center flex-shrink-0"
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="hsl(240 5.9% 10%)"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+        </div>
+        <div class="logo-text overflow-hidden whitespace-nowrap">
+          <div class="font-semibold text-sm leading-tight">管理系统</div>
+          <div class="text-[11px] text-[hsl(240_5%_55%)] leading-tight mt-0.5">
+            Admin Console
+          </div>
+        </div>
+      </div>
+
+      <!-- 导航区域 (可滚动) -->
+      <nav class="flex-1 overflow-y-auto sidebar-scroll py-3 px-2 space-y-1">
+        <!-- 主要功能 -->
+        <div
+          class="group-label text-[10px] font-semibold uppercase tracking-widest text-[hsl(240_5%_45%)] px-2 py-1 mb-1 overflow-hidden whitespace-nowrap"
+        >
+          主要功能
+        </div>
+
+        <a
+          href="#"
+          class="nav-item nav-item-active flex items-center gap-3 px-2 py-2 rounded-md cursor-pointer transition-colors duration-150"
+          data-label="概览"
+        >
+          <i
+            data-lucide="layout-dashboard"
+            class="w-4 h-4 flex-shrink-0"
+          ></i>
+          <span class="nav-label text-sm font-medium">概览</span>
+        </a>
+
+        <a
+          href="#"
+          class="nav-item flex items-center gap-3 px-2 py-2 rounded-md cursor-pointer text-[hsl(240_5%_64.9%)] transition-colors duration-150"
+          data-label="数据分析"
+        >
+          <i data-lucide="bar-chart-2" class="w-4 h-4 flex-shrink-0"></i>
+          <span class="nav-label text-sm font-medium flex-1">数据分析</span>
+          <span class="nav-badge badge">新</span>
+        </a>
+
+        <a
+          href="#"
+          class="nav-item flex items-center gap-3 px-2 py-2 rounded-md cursor-pointer text-[hsl(240_5%_64.9%)] transition-colors duration-150"
+          data-label="用户管理"
+        >
+          <i data-lucide="users" class="w-4 h-4 flex-shrink-0"></i>
+          <span class="nav-label text-sm font-medium flex-1">用户管理</span>
+        </a>
+
+        <a
+          href="#"
+          class="nav-item flex items-center gap-3 px-2 py-2 rounded-md cursor-pointer text-[hsl(240_5%_64.9%)] transition-colors duration-150"
+          data-label="商品管理"
+        >
+          <i data-lucide="package" class="w-4 h-4 flex-shrink-0"></i>
+          <span class="nav-label text-sm font-medium">商品管理</span>
+        </a>
+
+        <a
+          href="#"
+          class="nav-item flex items-center gap-3 px-2 py-2 rounded-md cursor-pointer text-[hsl(240_5%_64.9%)] transition-colors duration-150"
+          data-label="订单管理"
+        >
+          <i data-lucide="shopping-cart" class="w-4 h-4 flex-shrink-0"></i>
+          <span class="nav-label text-sm font-medium flex-1">订单管理</span>
+          <span class="nav-badge badge">12</span>
+        </a>
+
+        <a
+          href="#"
+          class="nav-item flex items-center gap-3 px-2 py-2 rounded-md cursor-pointer text-[hsl(240_5%_64.9%)] transition-colors duration-150"
+          data-label="财务报表"
+        >
+          <i data-lucide="wallet" class="w-4 h-4 flex-shrink-0"></i>
+          <span class="nav-label text-sm font-medium">财务报表</span>
+        </a>
+
+        <!-- 分组 -->
+        <div
+          class="group-label text-[10px] font-semibold uppercase tracking-widest text-[hsl(240_5%_45%)] px-2 py-1 mt-4 mb-1 overflow-hidden whitespace-nowrap"
+        >
+          内容管理
+        </div>
+
+        <a
+          href="#"
+          class="nav-item flex items-center gap-3 px-2 py-2 rounded-md cursor-pointer text-[hsl(240_5%_64.9%)] transition-colors duration-150"
+          data-label="文章管理"
+        >
+          <i data-lucide="file-text" class="w-4 h-4 flex-shrink-0"></i>
+          <span class="nav-label text-sm font-medium">文章管理</span>
+        </a>
+
+        <a
+          href="#"
+          class="nav-item flex items-center gap-3 px-2 py-2 rounded-md cursor-pointer text-[hsl(240_5%_64.9%)] transition-colors duration-150"
+          data-label="媒体库"
+        >
+          <i data-lucide="image" class="w-4 h-4 flex-shrink-0"></i>
+          <span class="nav-label text-sm font-medium">媒体库</span>
+        </a>
+
+        <a
+          href="#"
+          class="nav-item flex items-center gap-3 px-2 py-2 rounded-md cursor-pointer text-[hsl(240_5%_64.9%)] transition-colors duration-150"
+          data-label="评论管理"
+        >
+          <i data-lucide="message-square" class="w-4 h-4 flex-shrink-0"></i>
+          <span class="nav-label text-sm font-medium flex-1">评论管理</span>
+          <span class="nav-badge badge">3</span>
+        </a>
+
+        <!-- 分组 -->
+        <div
+          class="group-label text-[10px] font-semibold uppercase tracking-widest text-[hsl(240_5%_45%)] px-2 py-1 mt-4 mb-1 overflow-hidden whitespace-nowrap"
+        >
+          系统
+        </div>
+
+        <a
+          href="#"
+          class="nav-item flex items-center gap-3 px-2 py-2 rounded-md cursor-pointer text-[hsl(240_5%_64.9%)] transition-colors duration-150"
+          data-label="权限管理"
+        >
+          <i data-lucide="shield" class="w-4 h-4 flex-shrink-0"></i>
+          <span class="nav-label text-sm font-medium">权限管理</span>
+        </a>
+
+        <a
+          href="#"
+          class="nav-item flex items-center gap-3 px-2 py-2 rounded-md cursor-pointer text-[hsl(240_5%_64.9%)] transition-colors duration-150"
+          data-label="日志记录"
+        >
+          <i data-lucide="scroll-text" class="w-4 h-4 flex-shrink-0"></i>
+          <span class="nav-label text-sm font-medium">日志记录</span>
+        </a>
+
+        <a
+          href="#"
+          class="nav-item flex items-center gap-3 px-2 py-2 rounded-md cursor-pointer text-[hsl(240_5%_64.9%)] transition-colors duration-150"
+          data-label="系统设置"
+        >
+          <i data-lucide="settings" class="w-4 h-4 flex-shrink-0"></i>
+          <span class="nav-label text-sm font-medium">系统设置</span>
+        </a>
+      </nav>
+
+      <!-- 侧边栏底部 -->
+      <div
+        class="border-t border-[hsl(240_3.7%_18%)] p-3 flex-shrink-0 flex items-center gap-3"
+      >
+        <!-- 折叠按钮 -->
+        <button
+          id="toggle-btn"
+          onclick="toggleSidebar()"
+          class="w-8 h-8 rounded-md flex items-center justify-center text-[hsl(240_5%_55%)] hover:bg-[hsl(240_3.7%_18%)] hover:text-white transition-colors duration-150 cursor-pointer flex-shrink-0"
+        >
+          <i id="toggle-icon" data-lucide="panel-left-close" class="w-4 h-4"></i>
+        </button>
+        <div class="sidebar-footer-text overflow-hidden whitespace-nowrap">
+          <div class="text-[11px] text-[hsl(240_5%_45%)]">v2.4.1</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ======================== 右侧区域 ======================== -->
+    <div id="main-content" class="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <!-- ====== 顶栏 ====== -->
+      <header
+        class="h-[61px] flex-shrink-0 bg-white border-b border-[hsl(240_5.9%_90%)] flex items-center px-6 gap-4"
+      >
+        <!-- 面包屑 -->
+        <div class="flex items-center gap-1.5 flex-1 min-w-0">
+          <span class="text-[hsl(240_3.8%_46.1%)] text-sm">管理系统</span>
+          <i
+            data-lucide="chevron-right"
+            class="w-3.5 h-3.5 text-[hsl(240_5.9%_80%)]"
+          ></i>
+          <span class="text-sm font-medium text-[hsl(240_10%_3.9%)]">概览</span>
+        </div>
+
+        <!-- 右侧工具栏 -->
+        <div class="flex items-center gap-1">
+          <!-- 搜索 -->
+          <button
+            class="w-8 h-8 rounded-md flex items-center justify-center text-[hsl(240_3.8%_46.1%)] hover:bg-[hsl(240_4.8%_95.9%)] hover:text-[hsl(240_10%_3.9%)] transition-colors duration-150 cursor-pointer"
+          >
+            <i data-lucide="search" class="w-4 h-4"></i>
+          </button>
+
+          <!-- 消息 -->
+          <button
+            class="w-8 h-8 rounded-md flex items-center justify-center text-[hsl(240_3.8%_46.1%)] hover:bg-[hsl(240_4.8%_95.9%)] hover:text-[hsl(240_10%_3.9%)] transition-colors duration-150 cursor-pointer relative"
+          >
+            <i data-lucide="mail" class="w-4 h-4"></i>
+            <span
+              class="absolute top-1 right-1 w-2 h-2 bg-[hsl(0_72.2%_50.6%)] rounded-full"
+            ></span>
+          </button>
+
+          <!-- 通知 -->
+          <button
+            id="notif-btn"
+            onclick="toggleNotif()"
+            class="w-8 h-8 rounded-md flex items-center justify-center text-[hsl(240_3.8%_46.1%)] hover:bg-[hsl(240_4.8%_95.9%)] hover:text-[hsl(240_10%_3.9%)] transition-colors duration-150 cursor-pointer relative"
+          >
+            <i data-lucide="bell" class="w-4 h-4"></i>
+            <span
+              class="absolute top-1 right-1 min-w-[14px] h-[14px] bg-[hsl(0_72.2%_50.6%)] rounded-full text-white text-[9px] font-bold flex items-center justify-center px-0.5"
+              >5</span
+            >
+          </button>
+
+          <!-- 分割线 -->
+          <div class="w-px h-5 bg-[hsl(240_5.9%_90%)] mx-1"></div>
+
+          <!-- 用户信息 -->
+          <button
+            class="flex items-center gap-2.5 pl-1 pr-2 py-1 rounded-md hover:bg-[hsl(240_4.8%_95.9%)] transition-colors duration-150 cursor-pointer"
+          >
+            <!-- 头像 -->
+            <div
+              class="w-8 h-8 rounded-full bg-[hsl(240_5.9%_10%)] flex items-center justify-center text-white text-xs font-semibold flex-shrink-0 overflow-hidden"
+            >
+              <img
+                src="https://api.dicebear.com/7.x/initials/svg?seed=王&backgroundColor=09090b&textColor=ffffff"
+                alt="头像"
+                class="w-full h-full object-cover"
+                onerror="this.style.display='none'"
+              />
+              <span class="fallback-initial" style="display: none">王</span>
+            </div>
+            <!-- 用户名 -->
+            <div class="text-left hidden sm:block">
+              <div class="text-sm font-medium leading-tight text-[hsl(240_10%_3.9%)]">
+                王管理员
+              </div>
+              <div
+                class="text-[11px] text-[hsl(240_3.8%_46.1%)] leading-tight"
+              >
+                超级管理员
+              </div>
+            </div>
+            <i
+              data-lucide="chevron-down"
+              class="w-3.5 h-3.5 text-[hsl(240_3.8%_46.1%)] hidden sm:block"
+            ></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- 通知面板 (绝对定位) -->
+      <div
+        id="notif-panel"
+        class="hidden absolute right-6 top-[69px] w-80 bg-white rounded-lg border border-[hsl(240_5.9%_90%)] shadow-lg z-50"
+        style="
+          box-shadow: 0 4px 24px -4px rgba(0,0,0,0.12), 0 0 0 1px hsl(240 5.9% 90%);
+        "
+      >
+        <div
+          class="flex items-center justify-between px-4 py-3 border-b border-[hsl(240_5.9%_90%)]"
+        >
+          <span class="font-semibold text-sm">通知</span>
+          <button
+            class="text-xs text-[hsl(240_3.8%_46.1%)] hover:text-[hsl(240_10%_3.9%)] cursor-pointer"
+          >
+            全部已读
+          </button>
+        </div>
+        <div class="divide-y divide-[hsl(240_5.9%_90%)]">
+          <div
+            class="flex gap-3 p-4 hover:bg-[hsl(240_4.8%_97%)] cursor-pointer transition-colors"
+          >
+            <div
+              class="w-8 h-8 rounded-full bg-[hsl(240_4.8%_95.9%)] flex items-center justify-center flex-shrink-0"
+            >
+              <i
+                data-lucide="user-plus"
+                class="w-4 h-4 text-[hsl(240_10%_3.9%)]"
+              ></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-[hsl(240_10%_3.9%)] leading-snug">
+                新用户注册
+              </p>
+              <p class="text-xs text-[hsl(240_3.8%_46.1%)] mt-0.5">
+                张三刚刚完成了注册
+              </p>
+              <p class="text-[10px] text-[hsl(240_5.9%_70%)] mt-1">2 分钟前</p>
+            </div>
+            <div class="w-2 h-2 bg-[hsl(240_5.9%_10%)] rounded-full flex-shrink-0 mt-1.5"></div>
+          </div>
+          <div
+            class="flex gap-3 p-4 hover:bg-[hsl(240_4.8%_97%)] cursor-pointer transition-colors"
+          >
+            <div
+              class="w-8 h-8 rounded-full bg-[hsl(240_4.8%_95.9%)] flex items-center justify-center flex-shrink-0"
+            >
+              <i
+                data-lucide="shopping-cart"
+                class="w-4 h-4 text-[hsl(240_10%_3.9%)]"
+              ></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-[hsl(240_10%_3.9%)] leading-snug">
+                新订单待处理
+              </p>
+              <p class="text-xs text-[hsl(240_3.8%_46.1%)] mt-0.5">
+                订单 #ORD-2024-0892 需要确认
+              </p>
+              <p class="text-[10px] text-[hsl(240_5.9%_70%)] mt-1">15 分钟前</p>
+            </div>
+            <div class="w-2 h-2 bg-[hsl(240_5.9%_10%)] rounded-full flex-shrink-0 mt-1.5"></div>
+          </div>
+          <div
+            class="flex gap-3 p-4 hover:bg-[hsl(240_4.8%_97%)] cursor-pointer transition-colors"
+          >
+            <div
+              class="w-8 h-8 rounded-full bg-[hsl(240_4.8%_95.9%)] flex items-center justify-center flex-shrink-0"
+            >
+              <i
+                data-lucide="alert-triangle"
+                class="w-4 h-4 text-[hsl(38_92%_50%)]"
+              ></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-[hsl(240_10%_3.9%)] leading-snug">
+                库存预警
+              </p>
+              <p class="text-xs text-[hsl(240_3.8%_46.1%)] mt-0.5">
+                3 件商品库存不足
+              </p>
+              <p class="text-[10px] text-[hsl(240_5.9%_70%)] mt-1">1 小时前</p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="px-4 py-3 border-t border-[hsl(240_5.9%_90%)] text-center"
+        >
+          <button
+            class="text-xs font-medium text-[hsl(240_10%_3.9%)] hover:underline cursor-pointer"
+          >
+            查看全部通知
+          </button>
+        </div>
+      </div>
+
+      <!-- ====== 主内容区域 ====== -->
+      <main
+        class="flex-1 overflow-y-auto main-scroll bg-[hsl(240_4.8%_97%)] p-6"
+      >
+        <!-- 页面标题 -->
+        <div class="mb-6">
+          <h1 class="text-xl font-semibold text-[hsl(240_10%_3.9%)]">
+            数据概览
+          </h1>
+          <p class="text-sm text-[hsl(240_3.8%_46.1%)] mt-1">
+            欢迎回来，王管理员。以下是今日运营概况。
+          </p>
+        </div>
+
+        <!-- KPI 卡片 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+          <!-- 总用户 -->
+          <div
+            class="bg-white rounded-lg border border-[hsl(240_5.9%_90%)] p-5"
+          >
+            <div class="flex items-center justify-between mb-3">
+              <span
+                class="text-sm text-[hsl(240_3.8%_46.1%)] font-medium"
+              >总用户数</span>
+              <div
+                class="w-8 h-8 rounded-md bg-[hsl(240_4.8%_95.9%)] flex items-center justify-center"
+              >
+                <i
+                  data-lucide="users"
+                  class="w-4 h-4 text-[hsl(240_10%_3.9%)]"
+                ></i>
+              </div>
+            </div>
+            <div class="text-2xl font-bold text-[hsl(240_10%_3.9%)]">
+              24,521
+            </div>
+            <div class="flex items-center gap-1 mt-1.5">
+              <i
+                data-lucide="trending-up"
+                class="w-3.5 h-3.5 text-[hsl(142_76%_36%)]"
+              ></i>
+              <span class="text-xs text-[hsl(142_76%_36%)] font-medium"
+                >+12.5%</span
+              >
+              <span class="text-xs text-[hsl(240_3.8%_46.1%)]"
+                >较上月</span
+              >
+            </div>
+          </div>
+
+          <!-- 月收入 -->
+          <div
+            class="bg-white rounded-lg border border-[hsl(240_5.9%_90%)] p-5"
+          >
+            <div class="flex items-center justify-between mb-3">
+              <span
+                class="text-sm text-[hsl(240_3.8%_46.1%)] font-medium"
+              >月度收入</span>
+              <div
+                class="w-8 h-8 rounded-md bg-[hsl(240_4.8%_95.9%)] flex items-center justify-center"
+              >
+                <i
+                  data-lucide="wallet"
+                  class="w-4 h-4 text-[hsl(240_10%_3.9%)]"
+                ></i>
+              </div>
+            </div>
+            <div class="text-2xl font-bold text-[hsl(240_10%_3.9%)]">
+              ¥128,400
+            </div>
+            <div class="flex items-center gap-1 mt-1.5">
+              <i
+                data-lucide="trending-up"
+                class="w-3.5 h-3.5 text-[hsl(142_76%_36%)]"
+              ></i>
+              <span class="text-xs text-[hsl(142_76%_36%)] font-medium"
+                >+8.2%</span
+              >
+              <span class="text-xs text-[hsl(240_3.8%_46.1%)]"
+                >较上月</span
+              >
+            </div>
+          </div>
+
+          <!-- 订单数 -->
+          <div
+            class="bg-white rounded-lg border border-[hsl(240_5.9%_90%)] p-5"
+          >
+            <div class="flex items-center justify-between mb-3">
+              <span
+                class="text-sm text-[hsl(240_3.8%_46.1%)] font-medium"
+              >本月订单</span>
+              <div
+                class="w-8 h-8 rounded-md bg-[hsl(240_4.8%_95.9%)] flex items-center justify-center"
+              >
+                <i
+                  data-lucide="shopping-cart"
+                  class="w-4 h-4 text-[hsl(240_10%_3.9%)]"
+                ></i>
+              </div>
+            </div>
+            <div class="text-2xl font-bold text-[hsl(240_10%_3.9%)]">
+              3,847
+            </div>
+            <div class="flex items-center gap-1 mt-1.5">
+              <i
+                data-lucide="trending-down"
+                class="w-3.5 h-3.5 text-[hsl(0_72.2%_50.6%)]"
+              ></i>
+              <span class="text-xs text-[hsl(0_72.2%_50.6%)] font-medium"
+                >-2.1%</span
+              >
+              <span class="text-xs text-[hsl(240_3.8%_46.1%)]"
+                >较上月</span
+              >
+            </div>
+          </div>
+
+          <!-- 转化率 -->
+          <div
+            class="bg-white rounded-lg border border-[hsl(240_5.9%_90%)] p-5"
+          >
+            <div class="flex items-center justify-between mb-3">
+              <span
+                class="text-sm text-[hsl(240_3.8%_46.1%)] font-medium"
+              >转化率</span>
+              <div
+                class="w-8 h-8 rounded-md bg-[hsl(240_4.8%_95.9%)] flex items-center justify-center"
+              >
+                <i
+                  data-lucide="percent"
+                  class="w-4 h-4 text-[hsl(240_10%_3.9%)]"
+                ></i>
+              </div>
+            </div>
+            <div class="text-2xl font-bold text-[hsl(240_10%_3.9%)]">4.63%</div>
+            <div class="flex items-center gap-1 mt-1.5">
+              <i
+                data-lucide="trending-up"
+                class="w-3.5 h-3.5 text-[hsl(142_76%_36%)]"
+              ></i>
+              <span class="text-xs text-[hsl(142_76%_36%)] font-medium"
+                >+0.4%</span
+              >
+              <span class="text-xs text-[hsl(240_3.8%_46.1%)]"
+                >较上月</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- 图表区域 -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+          <!-- 收入趋势图 (占2/3) -->
+          <div
+            class="lg:col-span-2 bg-white rounded-lg border border-[hsl(240_5.9%_90%)] p-5"
+          >
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h2 class="text-sm font-semibold text-[hsl(240_10%_3.9%)]">
+                  收入趋势
+                </h2>
+                <p class="text-xs text-[hsl(240_3.8%_46.1%)] mt-0.5">
+                  近 6 个月数据
+                </p>
+              </div>
+              <div class="flex items-center gap-2">
+                <button
+                  class="text-xs px-2.5 py-1 rounded-md bg-[hsl(240_5.9%_10%)] text-white font-medium cursor-pointer"
+                >
+                  月
+                </button>
+                <button
+                  class="text-xs px-2.5 py-1 rounded-md text-[hsl(240_3.8%_46.1%)] hover:bg-[hsl(240_4.8%_95.9%)] cursor-pointer transition-colors"
+                >
+                  季
+                </button>
+                <button
+                  class="text-xs px-2.5 py-1 rounded-md text-[hsl(240_3.8%_46.1%)] hover:bg-[hsl(240_4.8%_95.9%)] cursor-pointer transition-colors"
+                >
+                  年
+                </button>
+              </div>
+            </div>
+            <!-- SVG 折线图 -->
+            <div class="relative" style="height: 180px">
+              <svg
+                viewBox="0 0 600 180"
+                class="w-full h-full"
+                preserveAspectRatio="none"
+              >
+                <!-- 网格线 -->
+                <line
+                  x1="0"
+                  y1="36"
+                  x2="600"
+                  y2="36"
+                  stroke="hsl(240 5.9% 92%)"
+                  stroke-width="1"
+                />
+                <line
+                  x1="0"
+                  y1="72"
+                  x2="600"
+                  y2="72"
+                  stroke="hsl(240 5.9% 92%)"
+                  stroke-width="1"
+                />
+                <line
+                  x1="0"
+                  y1="108"
+                  x2="600"
+                  y2="108"
+                  stroke="hsl(240 5.9% 92%)"
+                  stroke-width="1"
+                />
+                <line
+                  x1="0"
+                  y1="144"
+                  x2="600"
+                  y2="144"
+                  stroke="hsl(240 5.9% 92%)"
+                  stroke-width="1"
+                />
+                <!-- 面积填充 -->
+                <defs>
+                  <linearGradient
+                    id="areaGrad"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop
+                      offset="0%"
+                      stop-color="hsl(240 5.9% 10%)"
+                      stop-opacity="0.12"
+                    />
+                    <stop
+                      offset="100%"
+                      stop-color="hsl(240 5.9% 10%)"
+                      stop-opacity="0.01"
+                    />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M 0 140 C 60 130, 80 100, 120 95 C 160 90, 180 110, 240 80 C 300 50, 320 60, 360 45 C 400 30, 420 55, 480 40 C 520 30, 550 35, 600 25 L 600 180 L 0 180 Z"
+                  fill="url(#areaGrad)"
+                />
+                <!-- 折线 -->
+                <path
+                  d="M 0 140 C 60 130, 80 100, 120 95 C 160 90, 180 110, 240 80 C 300 50, 320 60, 360 45 C 400 30, 420 55, 480 40 C 520 30, 550 35, 600 25"
+                  fill="none"
+                  stroke="hsl(240 5.9% 10%)"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <!-- 数据点 -->
+                <circle cx="120" cy="95" r="3.5" fill="white" stroke="hsl(240 5.9% 10%)" stroke-width="2"/>
+                <circle cx="240" cy="80" r="3.5" fill="white" stroke="hsl(240 5.9% 10%)" stroke-width="2"/>
+                <circle cx="360" cy="45" r="3.5" fill="white" stroke="hsl(240 5.9% 10%)" stroke-width="2"/>
+                <circle cx="480" cy="40" r="3.5" fill="white" stroke="hsl(240 5.9% 10%)" stroke-width="2"/>
+                <circle cx="600" cy="25" r="3.5" fill="hsl(240 5.9% 10%)" stroke="hsl(240 5.9% 10%)" stroke-width="2"/>
+              </svg>
+              <!-- X轴标签 -->
+              <div
+                class="absolute bottom-0 left-0 right-0 flex justify-between text-[10px] text-[hsl(240_3.8%_46.1%)]"
+              >
+                <span>11月</span>
+                <span>12月</span>
+                <span>1月</span>
+                <span>2月</span>
+                <span>3月</span>
+                <span>4月</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 销售分布饼图 (占1/3) -->
+          <div
+            class="bg-white rounded-lg border border-[hsl(240_5.9%_90%)] p-5"
+          >
+            <div class="mb-4">
+              <h2 class="text-sm font-semibold text-[hsl(240_10%_3.9%)]">
+                销售分布
+              </h2>
+              <p class="text-xs text-[hsl(240_3.8%_46.1%)] mt-0.5">
+                按品类
+              </p>
+            </div>
+            <!-- SVG 环形图 -->
+            <div class="flex justify-center mb-4">
+              <svg viewBox="0 0 120 120" width="120" height="120">
+                <!-- 环形背景 -->
+                <circle
+                  cx="60"
+                  cy="60"
+                  r="48"
+                  fill="none"
+                  stroke="hsl(240 4.8% 95.9%)"
+                  stroke-width="14"
+                />
+                <!-- 分段 - 电子产品 38% -->
+                <circle
+                  cx="60"
+                  cy="60"
+                  r="48"
+                  fill="none"
+                  stroke="hsl(240 5.9% 10%)"
+                  stroke-width="14"
+                  stroke-dasharray="114.5 187.5"
+                  stroke-dashoffset="0"
+                  transform="rotate(-90 60 60)"
+                />
+                <!-- 分段 - 服装 27% -->
+                <circle
+                  cx="60"
+                  cy="60"
+                  r="48"
+                  fill="none"
+                  stroke="hsl(240 3.8% 46.1%)"
+                  stroke-width="14"
+                  stroke-dasharray="81.3 220.7"
+                  stroke-dashoffset="-114.5"
+                  transform="rotate(-90 60 60)"
+                />
+                <!-- 分段 - 食品 20% -->
+                <circle
+                  cx="60"
+                  cy="60"
+                  r="48"
+                  fill="none"
+                  stroke="hsl(240 5.9% 70%)"
+                  stroke-width="14"
+                  stroke-dasharray="60.3 241.7"
+                  stroke-dashoffset="-195.8"
+                  transform="rotate(-90 60 60)"
+                />
+                <!-- 分段 - 其他 15% -->
+                <circle
+                  cx="60"
+                  cy="60"
+                  r="48"
+                  fill="none"
+                  stroke="hsl(240 5.9% 88%)"
+                  stroke-width="14"
+                  stroke-dasharray="45.2 256.8"
+                  stroke-dashoffset="-256.1"
+                  transform="rotate(-90 60 60)"
+                />
+                <!-- 中心文字 -->
+                <text
+                  x="60"
+                  y="56"
+                  text-anchor="middle"
+                  font-size="14"
+                  font-weight="700"
+                  fill="hsl(240 10% 3.9%)"
+                  font-family="Inter, sans-serif"
+                >
+                  3,847
+                </text>
+                <text
+                  x="60"
+                  y="70"
+                  text-anchor="middle"
+                  font-size="9"
+                  fill="hsl(240 3.8% 46.1%)"
+                  font-family="Inter, sans-serif"
+                >
+                  总订单
+                </text>
+              </svg>
+            </div>
+            <!-- 图例 -->
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-2.5 h-2.5 rounded-sm bg-[hsl(240_5.9%_10%)]"></div>
+                  <span class="text-xs text-[hsl(240_3.8%_46.1%)]"
+                    >电子产品</span
+                  >
+                </div>
+                <span class="text-xs font-medium text-[hsl(240_10%_3.9%)]"
+                  >38%</span
+                >
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-2.5 h-2.5 rounded-sm bg-[hsl(240_3.8%_46.1%)]"></div>
+                  <span class="text-xs text-[hsl(240_3.8%_46.1%)]">服装</span>
+                </div>
+                <span class="text-xs font-medium text-[hsl(240_10%_3.9%)]"
+                  >27%</span
+                >
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-2.5 h-2.5 rounded-sm bg-[hsl(240_5.9%_70%)]"></div>
+                  <span class="text-xs text-[hsl(240_3.8%_46.1%)]">食品</span>
+                </div>
+                <span class="text-xs font-medium text-[hsl(240_10%_3.9%)]"
+                  >20%</span
+                >
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-2.5 h-2.5 rounded-sm bg-[hsl(240_5.9%_88%)]"></div>
+                  <span class="text-xs text-[hsl(240_3.8%_46.1%)]">其他</span>
+                </div>
+                <span class="text-xs font-medium text-[hsl(240_10%_3.9%)]"
+                  >15%</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 底部两栏：最近订单 + 用户活跃 -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <!-- 最近订单表格 (占2/3) -->
+          <div
+            class="lg:col-span-2 bg-white rounded-lg border border-[hsl(240_5.9%_90%)] overflow-hidden"
+          >
+            <div
+              class="flex items-center justify-between px-5 py-4 border-b border-[hsl(240_5.9%_90%)]"
+            >
+              <h2 class="text-sm font-semibold text-[hsl(240_10%_3.9%)]">
+                最近订单
+              </h2>
+              <button
+                class="text-xs text-[hsl(240_3.8%_46.1%)] hover:text-[hsl(240_10%_3.9%)] flex items-center gap-1 cursor-pointer transition-colors"
+              >
+                查看全部
+                <i data-lucide="arrow-right" class="w-3 h-3"></i>
+              </button>
+            </div>
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="bg-[hsl(240_4.8%_97%)]">
+                  <th
+                    class="text-left text-xs font-medium text-[hsl(240_3.8%_46.1%)] px-5 py-2.5"
+                  >
+                    订单编号
+                  </th>
+                  <th
+                    class="text-left text-xs font-medium text-[hsl(240_3.8%_46.1%)] px-3 py-2.5"
+                  >
+                    客户
+                  </th>
+                  <th
+                    class="text-left text-xs font-medium text-[hsl(240_3.8%_46.1%)] px-3 py-2.5"
+                  >
+                    金额
+                  </th>
+                  <th
+                    class="text-left text-xs font-medium text-[hsl(240_3.8%_46.1%)] px-3 py-2.5"
+                  >
+                    状态
+                  </th>
+                  <th
+                    class="text-left text-xs font-medium text-[hsl(240_3.8%_46.1%)] px-3 py-2.5"
+                  >
+                    时间
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-[hsl(240_5.9%_92%)]">
+                <tr
+                  class="hover:bg-[hsl(240_4.8%_97.5%)] transition-colors cursor-pointer"
+                >
+                  <td
+                    class="px-5 py-3 font-mono text-xs font-medium text-[hsl(240_10%_3.9%)]"
+                  >
+                    #ORD-0892
+                  </td>
+                  <td class="px-3 py-3">
+                    <div class="flex items-center gap-2">
+                      <div
+                        class="w-6 h-6 rounded-full bg-[hsl(240_5.9%_10%)] text-white text-[10px] flex items-center justify-center font-medium flex-shrink-0"
+                      >
+                        张
+                      </div>
+                      <span class="text-xs text-[hsl(240_10%_3.9%)]"
+                        >张三</span
+                      >
+                    </div>
+                  </td>
+                  <td
+                    class="px-3 py-3 text-xs font-medium text-[hsl(240_10%_3.9%)]"
+                  >
+                    ¥1,240
+                  </td>
+                  <td class="px-3 py-3">
+                    <span
+                      class="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-[hsl(38_92%_95%)] text-[hsl(38_92%_35%)]"
+                    >
+                      <span class="w-1.5 h-1.5 rounded-full bg-[hsl(38_92%_50%)]"></span>
+                      待处理
+                    </span>
+                  </td>
+                  <td
+                    class="px-3 py-3 text-xs text-[hsl(240_3.8%_46.1%)]"
+                  >
+                    2分钟前
+                  </td>
+                </tr>
+                <tr
+                  class="hover:bg-[hsl(240_4.8%_97.5%)] transition-colors cursor-pointer"
+                >
+                  <td
+                    class="px-5 py-3 font-mono text-xs font-medium text-[hsl(240_10%_3.9%)]"
+                  >
+                    #ORD-0891
+                  </td>
+                  <td class="px-3 py-3">
+                    <div class="flex items-center gap-2">
+                      <div
+                        class="w-6 h-6 rounded-full bg-[hsl(240_3.8%_46.1%)] text-white text-[10px] flex items-center justify-center font-medium flex-shrink-0"
+                      >
+                        李
+                      </div>
+                      <span class="text-xs text-[hsl(240_10%_3.9%)]"
+                        >李四</span
+                      >
+                    </div>
+                  </td>
+                  <td
+                    class="px-3 py-3 text-xs font-medium text-[hsl(240_10%_3.9%)]"
+                  >
+                    ¥860
+                  </td>
+                  <td class="px-3 py-3">
+                    <span
+                      class="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-[hsl(142_76%_94%)] text-[hsl(142_76%_28%)]"
+                    >
+                      <span class="w-1.5 h-1.5 rounded-full bg-[hsl(142_76%_36%)]"></span>
+                      已完成
+                    </span>
+                  </td>
+                  <td
+                    class="px-3 py-3 text-xs text-[hsl(240_3.8%_46.1%)]"
+                  >
+                    28分钟前
+                  </td>
+                </tr>
+                <tr
+                  class="hover:bg-[hsl(240_4.8%_97.5%)] transition-colors cursor-pointer"
+                >
+                  <td
+                    class="px-5 py-3 font-mono text-xs font-medium text-[hsl(240_10%_3.9%)]"
+                  >
+                    #ORD-0890
+                  </td>
+                  <td class="px-3 py-3">
+                    <div class="flex items-center gap-2">
+                      <div
+                        class="w-6 h-6 rounded-full bg-[hsl(240_5.9%_70%)] text-white text-[10px] flex items-center justify-center font-medium flex-shrink-0"
+                      >
+                        王
+                      </div>
+                      <span class="text-xs text-[hsl(240_10%_3.9%)]"
+                        >王五</span
+                      >
+                    </div>
+                  </td>
+                  <td
+                    class="px-3 py-3 text-xs font-medium text-[hsl(240_10%_3.9%)]"
+                  >
+                    ¥3,580
+                  </td>
+                  <td class="px-3 py-3">
+                    <span
+                      class="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-[hsl(217_91%_95%)] text-[hsl(217_91%_38%)]"
+                    >
+                      <span class="w-1.5 h-1.5 rounded-full bg-[hsl(217_91%_60%)]"></span>
+                      配送中
+                    </span>
+                  </td>
+                  <td
+                    class="px-3 py-3 text-xs text-[hsl(240_3.8%_46.1%)]"
+                  >
+                    1小时前
+                  </td>
+                </tr>
+                <tr
+                  class="hover:bg-[hsl(240_4.8%_97.5%)] transition-colors cursor-pointer"
+                >
+                  <td
+                    class="px-5 py-3 font-mono text-xs font-medium text-[hsl(240_10%_3.9%)]"
+                  >
+                    #ORD-0889
+                  </td>
+                  <td class="px-3 py-3">
+                    <div class="flex items-center gap-2">
+                      <div
+                        class="w-6 h-6 rounded-full bg-[hsl(240_10%_3.9%)] text-white text-[10px] flex items-center justify-center font-medium flex-shrink-0"
+                      >
+                        赵
+                      </div>
+                      <span class="text-xs text-[hsl(240_10%_3.9%)]"
+                        >赵六</span
+                      >
+                    </div>
+                  </td>
+                  <td
+                    class="px-3 py-3 text-xs font-medium text-[hsl(240_10%_3.9%)]"
+                  >
+                    ¥420
+                  </td>
+                  <td class="px-3 py-3">
+                    <span
+                      class="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-[hsl(0_72.2%_95%)] text-[hsl(0_72.2%_40%)]"
+                    >
+                      <span class="w-1.5 h-1.5 rounded-full bg-[hsl(0_72.2%_50.6%)]"></span>
+                      已退款
+                    </span>
+                  </td>
+                  <td
+                    class="px-3 py-3 text-xs text-[hsl(240_3.8%_46.1%)]"
+                  >
+                    3小时前
+                  </td>
+                </tr>
+                <tr
+                  class="hover:bg-[hsl(240_4.8%_97.5%)] transition-colors cursor-pointer"
+                >
+                  <td
+                    class="px-5 py-3 font-mono text-xs font-medium text-[hsl(240_10%_3.9%)]"
+                  >
+                    #ORD-0888
+                  </td>
+                  <td class="px-3 py-3">
+                    <div class="flex items-center gap-2">
+                      <div
+                        class="w-6 h-6 rounded-full bg-[hsl(240_4.8%_95.9%)] text-[hsl(240_10%_3.9%)] text-[10px] flex items-center justify-center font-medium flex-shrink-0 border border-[hsl(240_5.9%_85%)]"
+                      >
+                        孙
+                      </div>
+                      <span class="text-xs text-[hsl(240_10%_3.9%)]"
+                        >孙七</span
+                      >
+                    </div>
+                  </td>
+                  <td
+                    class="px-3 py-3 text-xs font-medium text-[hsl(240_10%_3.9%)]"
+                  >
+                    ¥2,100
+                  </td>
+                  <td class="px-3 py-3">
+                    <span
+                      class="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-[hsl(142_76%_94%)] text-[hsl(142_76%_28%)]"
+                    >
+                      <span class="w-1.5 h-1.5 rounded-full bg-[hsl(142_76%_36%)]"></span>
+                      已完成
+                    </span>
+                  </td>
+                  <td
+                    class="px-3 py-3 text-xs text-[hsl(240_3.8%_46.1%)]"
+                  >
+                    5小时前
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- 右侧：活跃用户 + 系统状态 -->
+          <div class="space-y-4">
+            <!-- 活跃用户 -->
+            <div
+              class="bg-white rounded-lg border border-[hsl(240_5.9%_90%)] p-5"
+            >
+              <div
+                class="flex items-center justify-between mb-4"
+              >
+                <h2 class="text-sm font-semibold text-[hsl(240_10%_3.9%)]">
+                  近期活跃用户
+                </h2>
+                <button
+                  class="text-xs text-[hsl(240_3.8%_46.1%)] hover:text-[hsl(240_10%_3.9%)] cursor-pointer transition-colors"
+                >
+                  查看全部
+                </button>
+              </div>
+              <div class="space-y-3">
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-7 h-7 rounded-full bg-[hsl(240_5.9%_10%)] text-white text-xs flex items-center justify-center font-medium flex-shrink-0"
+                  >
+                    陈
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div
+                      class="text-xs font-medium text-[hsl(240_10%_3.9%)] truncate"
+                    >
+                      陈晓明
+                    </div>
+                    <div class="text-[10px] text-[hsl(240_3.8%_46.1%)]">
+                      5分钟前活跃
+                    </div>
+                  </div>
+                  <div class="status-dot bg-[hsl(142_76%_36%)]"></div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-7 h-7 rounded-full bg-[hsl(240_3.8%_46.1%)] text-white text-xs flex items-center justify-center font-medium flex-shrink-0"
+                  >
+                    刘
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div
+                      class="text-xs font-medium text-[hsl(240_10%_3.9%)] truncate"
+                    >
+                      刘雅婷
+                    </div>
+                    <div class="text-[10px] text-[hsl(240_3.8%_46.1%)]">
+                      12分钟前活跃
+                    </div>
+                  </div>
+                  <div class="status-dot bg-[hsl(142_76%_36%)]"></div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-7 h-7 rounded-full bg-[hsl(240_5.9%_70%)] text-white text-xs flex items-center justify-center font-medium flex-shrink-0"
+                  >
+                    周
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div
+                      class="text-xs font-medium text-[hsl(240_10%_3.9%)] truncate"
+                    >
+                      周建国
+                    </div>
+                    <div class="text-[10px] text-[hsl(240_3.8%_46.1%)]">
+                      45分钟前活跃
+                    </div>
+                  </div>
+                  <div class="status-dot bg-[hsl(38_92%_50%)]"></div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-7 h-7 rounded-full bg-[hsl(240_4.8%_90%)] text-[hsl(240_10%_3.9%)] text-xs flex items-center justify-center font-medium flex-shrink-0"
+                  >
+                    吴
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div
+                      class="text-xs font-medium text-[hsl(240_10%_3.9%)] truncate"
+                    >
+                      吴梦珠
+                    </div>
+                    <div class="text-[10px] text-[hsl(240_3.8%_46.1%)]">
+                      2小时前活跃
+                    </div>
+                  </div>
+                  <div class="status-dot bg-[hsl(240_5.9%_80%)]"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 系统状态 -->
+            <div
+              class="bg-white rounded-lg border border-[hsl(240_5.9%_90%)] p-5"
+            >
+              <h2
+                class="text-sm font-semibold text-[hsl(240_10%_3.9%)] mb-4"
+              >
+                系统状态
+              </h2>
+              <div class="space-y-3.5">
+                <div>
+                  <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-xs text-[hsl(240_3.8%_46.1%)]"
+                      >CPU 使用率</span
+                    >
+                    <span
+                      class="text-xs font-medium text-[hsl(240_10%_3.9%)]"
+                      >42%</span
+                    >
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: 42%"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-xs text-[hsl(240_3.8%_46.1%)]"
+                      >内存占用</span
+                    >
+                    <span
+                      class="text-xs font-medium text-[hsl(240_10%_3.9%)]"
+                      >68%</span
+                    >
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: 68%"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-xs text-[hsl(240_3.8%_46.1%)]"
+                      >磁盘使用</span
+                    >
+                    <span
+                      class="text-xs font-medium text-[hsl(240_10%_3.9%)]"
+                      >31%</span
+                    >
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: 31%"></div>
+                  </div>
+                </div>
+                <div class="pt-1 flex items-center gap-2">
+                  <div class="status-dot bg-[hsl(142_76%_36%)]"></div>
+                  <span class="text-xs text-[hsl(240_3.8%_46.1%)]"
+                    >所有服务运行正常</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- ======================== 脚本 ======================== -->
+    <script>
+      // 初始化 Lucide 图标
+      lucide.createIcons();
+
+      let isCollapsed = false;
+
+      function toggleSidebar() {
+        isCollapsed = !isCollapsed;
+        const sidebar = document.getElementById("sidebar");
+        const icon = document.getElementById("toggle-icon");
+
+        if (isCollapsed) {
+          sidebar.classList.remove("sidebar-expanded");
+          sidebar.classList.add("sidebar-collapsed");
+          icon.setAttribute("data-lucide", "panel-left-open");
+        } else {
+          sidebar.classList.remove("sidebar-collapsed");
+          sidebar.classList.add("sidebar-expanded");
+          icon.setAttribute("data-lucide", "panel-left-close");
+        }
+
+        // 重新渲染 icon
+        lucide.createIcons();
+      }
+
+      // 通知面板开关
+      let notifOpen = false;
+      function toggleNotif() {
+        notifOpen = !notifOpen;
+        const panel = document.getElementById("notif-panel");
+        if (notifOpen) {
+          panel.classList.remove("hidden");
+        } else {
+          panel.classList.add("hidden");
+        }
+      }
+
+      // 点击外部关闭通知面板
+      document.addEventListener("click", function (e) {
+        const panel = document.getElementById("notif-panel");
+        const btn = document.getElementById("notif-btn");
+        if (notifOpen && !panel.contains(e.target) && !btn.contains(e.target)) {
+          panel.classList.add("hidden");
+          notifOpen = false;
+        }
+      });
+
+      // 菜单项点击激活
+      document.querySelectorAll(".nav-item").forEach((item) => {
+        item.addEventListener("click", function (e) {
+          e.preventDefault();
+          document.querySelectorAll(".nav-item").forEach((i) => {
+            i.classList.remove("nav-item-active");
+            i.classList.add(
+              "text-[hsl(240_5%_64.9%)]"
+            );
+          });
+          this.classList.add("nav-item-active");
+          this.classList.remove("text-[hsl(240_5%_64.9%)]");
+        });
+      });
+    </script>
+  </body>
+</html>

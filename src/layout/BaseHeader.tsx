@@ -1,6 +1,6 @@
 import type { JSX } from 'react'
 
-import LayoutSection from '@/layout/BaseSection'
+import LayoutSection from '@/layout/components/BaseSection'
 
 function BaseHeader(): JSX.Element {
   return (
