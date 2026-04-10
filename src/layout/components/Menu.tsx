@@ -6,8 +6,9 @@ import { Menu } from 'antd'
 import type { MenuProps } from 'antd'
 
 import { Icon } from '@/components'
-import { mockMenu } from '@/constants'
 import type { MenuItem } from '@/types'
+
+import { fetchMenus } from '@/api'
 
 function AntdMenu(): JSX.Element {
   const navigate = useNavigate()
@@ -15,12 +16,29 @@ function AntdMenu(): JSX.Element {
   const [menuList, setMenuList] = React.useState<MenuItem[]>([])
 
   React.useEffect(() => {
-    // 模拟获取菜单数据
-    setMenuList(mockMenu)
+    let isMounted = true
+
+    const loadMenuList = async (): Promise<void> => {
+      try {
+        const res = await fetchMenus()
+        if (res.success) {
+          const nextMenuList = res.data || []
+          console.log('Fetched menu list:', nextMenuList)
+          if (isMounted) setMenuList(nextMenuList)
+        }
+      } catch (error) {
+        console.error('Failed to load menu list:', error)
+      }
+    }
+
+    void loadMenuList()
+
+    return () => {
+      isMounted = false
+    }
   }, [])
 
   const onMenuClick: MenuProps['onClick'] = (e) => {
-    console.log('Menu item clicked:', e)
     navigate(e.key)
   }
 
