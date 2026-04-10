@@ -1,11 +1,5 @@
-import type { AxiosRequestConfig } from 'axios'
-import { mockMenu } from '@/constants'
-
-export interface MockItem<T = unknown> {
-  url: string
-  method: 'get' | 'post' | 'put' | 'delete'
-  handler: (config: AxiosRequestConfig) => WebApiResponse<T>
-}
+import type { MockItem } from '@/mock'
+import { mockMenu } from '@/mock/data/system'
 
 export const systemMock: MockItem[] = [
   {

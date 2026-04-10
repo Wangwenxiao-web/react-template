@@ -1,10 +1,16 @@
 import type { AxiosRequestConfig } from 'axios'
-import { systemMock, type MockItem } from './modules/system'
+import { systemMock } from './modules/system'
 
 const mockList: MockItem[] = [...systemMock]
 
 function normalizeUrl(url: string) {
   return url.split('?')[0]
+}
+
+export interface MockItem<T = unknown> {
+  url: string
+  method: 'get' | 'post' | 'put' | 'delete'
+  handler: (config: AxiosRequestConfig) => WebApiResponse<T>
 }
 
 export function matchMock(config: AxiosRequestConfig) {
