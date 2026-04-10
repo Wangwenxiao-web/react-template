@@ -1,8 +1,17 @@
 import type { JSX } from 'react'
-import Layout from '@/layout/Layout'
+import { RouterProvider } from 'react-router-dom'
+import { ConfigProvider } from 'antd'
+import useAntdTheme from '@/hooks/useAntdTheme'
+import { router } from '@/router'
 
 function App(): JSX.Element {
-  return <Layout />
+  const configProps = useAntdTheme()
+
+  return (
+    <ConfigProvider {...configProps}>
+      <RouterProvider router={router} />
+    </ConfigProvider>
+  )
 }
 
 export default App

@@ -12,7 +12,7 @@ const fullPageFallback = createElement(PageLoading, { fullPage: true })
 const renderElement = (Component: React.ComponentType) =>
   createElement(Suspense, { fallback: fullPageFallback }, createElement(Component))
 
-const AppLayout = lazy(() => import('@/App'))
+const Layout = lazy(() => import('@/layout/Layout'))
 const LoginPage = lazy(() => import('@/views/Auth/Login'))
 const HomePage = lazy(() => import('@/views/Home/Home'))
 
@@ -24,7 +24,7 @@ export const routes: RouteObject[] = [
   },
   {
     path: '/',
-    element: createElement(AuthGuard, null, renderElement(AppLayout)),
+    element: createElement(AuthGuard, null, renderElement(Layout)),
     handle: { title: '主页' },
     children: [
       {

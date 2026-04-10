@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import AppRoot from '@/AppRoot'
+import App from '@/App'
 
 import '@/styles/vendors.css'
 
@@ -9,6 +9,6 @@ if (!root) throw new Error('Root element not found')
 
 createRoot(root).render(
   <StrictMode>
-    <AppRoot />
+    <App />
   </StrictMode>,
 )
