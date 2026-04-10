@@ -1,5 +1,6 @@
 import { theme } from 'antd'
 import type { ConfigProviderProps } from 'antd'
+import zhCN from 'antd/locale/zh_CN'
 import { createStyles } from 'antd-style'
 import clsx from 'clsx'
 
@@ -161,10 +162,6 @@ const useAntdTheme = (): ConfigProviderProps => {
         colorBgMask: 'rgba(38, 38, 38, 0.45)',
         colorBorder: '#e5e5e5',
         colorBorderSecondary: '#f5f5f5',
-        borderRadius: 10,
-        borderRadiusXS: 2,
-        borderRadiusSM: 6,
-        borderRadiusLG: 14,
         padding: 16,
         paddingSM: 12,
         paddingLG: 24,
@@ -187,25 +184,16 @@ const useAntdTheme = (): ConfigProviderProps => {
           defaultHoverColor: '#18181b',
           defaultActiveBg: '#e4e4e7',
           defaultActiveBorderColor: '#d4d4d8',
-          borderRadius: 6,
         },
         Input: {
           activeShadow: 'none',
           hoverBorderColor: '#a1a1aa',
           activeBorderColor: '#18181b',
-          borderRadius: 6,
         },
         Select: {
           optionSelectedBg: '#f4f4f5',
           optionActiveBg: '#fafafa',
           optionSelectedFontWeight: 500,
-          borderRadius: 6,
-        },
-        Alert: {
-          borderRadiusLG: 8,
-        },
-        Modal: {
-          borderRadiusLG: 12,
         },
         Progress: {
           defaultColor: '#18181b',
@@ -220,9 +208,6 @@ const useAntdTheme = (): ConfigProviderProps => {
           innerMinMargin: 4,
           innerMaxMargin: 24,
         },
-        Checkbox: {
-          borderRadiusSM: 4,
-        },
         Slider: {
           trackBg: '#f4f4f5',
           trackHoverBg: '#e4e4e7',
@@ -230,17 +215,18 @@ const useAntdTheme = (): ConfigProviderProps => {
           handleSizeHover: 20,
           railSize: 6,
         },
-        ColorPicker: {
-          borderRadius: 6,
-        },
         Menu: {
           darkPopupBg: sidebar,
           darkItemBg: sidebar,
           darkSubMenuItemBg: sidebar,
           darkItemHoverBg: sidebarHover,
         },
+        Form: {
+          itemMarginBottom: 16,
+        },
       },
     },
+    locale: zhCN,
     button: {
       classNames: ({ props }) => ({
         root: clsx(
@@ -249,6 +235,7 @@ const useAntdTheme = (): ConfigProviderProps => {
           props.danger && styles.buttonDanger,
         ),
       }),
+      autoInsertSpace: false,
     },
     input: {
       classNames: ({ props }) => ({
