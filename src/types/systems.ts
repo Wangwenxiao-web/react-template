@@ -1,4 +1,5 @@
-import type { IconName } from '@/components/Icon/Icon'
+import type { IconName } from '@/components/Icon/types'
+
 export interface MenuItem {
   id: number
   menuName: string

@@ -1,20 +1,5 @@
 // 常量定义：枚举值、状态码、配置常量
-import type { IconName } from '@/components/Icon/Icon'
-
-interface MenuItem {
-  id: number
-  menuName: string
-  menuUrl: string
-  parentId: number | null
-  orderNum: number
-  icon: IconName | null
-  perms: string | null
-  type: number
-  createTime: string
-  updateTime: string
-  status: number
-  children: MenuItem[]
-}
+import type { MenuItem } from '@/types'
 
 export const mockMenu: MenuItem[] = [
   {
