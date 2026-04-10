@@ -1,12 +1,8 @@
 import type { JSX } from 'react'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-
+import { RouterProvider } from 'react-router-dom'
 import { ConfigProvider } from 'antd'
-
 import useAntdTheme from '@/hooks/useAntdTheme'
-import { routes } from '@/router'
-
-const router = createBrowserRouter(routes)
+import { router } from '@/router'
 
 function AppRoot(): JSX.Element {
   const configProps = useAntdTheme()

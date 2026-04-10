@@ -4,6 +4,8 @@ import axios, {
   type InternalAxiosRequestConfig,
 } from 'axios'
 import { matchMock } from '@/mock'
+import { useAuthStore } from '@/stores/auth'
+import { router } from '@/router'
 
 const useMock = import.meta.env.VITE_USE_MOCK === 'true'
 
@@ -50,7 +52,15 @@ request.interceptors.response.use(
     }
     return Promise.reject(new Error(res.statusText || '请求失败'))
   },
-  (err: unknown) => Promise.reject(err),
+  (err: unknown) => {
+    if (axios.isAxiosError(err) && err.response?.status === 401) {
+      useAuthStore.getState().logout()
+      // 预留：useAuthStore.getState().showAuthModal()
+      const returnUrl = encodeURIComponent(window.location.pathname + window.location.search)
+      void router.navigate(`/login?redirect=${returnUrl}`, { replace: true })
+    }
+    return Promise.reject(err)
+  },
 )
 
 export default request
