@@ -1,11 +1,13 @@
 // 常量定义：枚举值、状态码、配置常量
+import type { IconName } from '@/components/Icon/Icon'
+
 interface MenuItem {
   id: number
   menuName: string
   menuUrl: string
   parentId: number | null
   orderNum: number
-  icon: string | null
+  icon: IconName | null
   perms: string | null
   type: number
   createTime: string
@@ -21,7 +23,7 @@ export const mockMenu: MenuItem[] = [
     menuUrl: '/home',
     parentId: null,
     orderNum: 0,
-    icon: 'fa-home',
+    icon: 'House',
     perms: null,
     type: 2,
     createTime: '2025-03-26T06:37:36',
@@ -35,7 +37,7 @@ export const mockMenu: MenuItem[] = [
     menuUrl: '/system',
     parentId: null,
     orderNum: 0,
-    icon: 'fa-cog',
+    icon: 'Settings',
     perms: null,
     type: 1,
     createTime: '2025-03-26T06:38:46',
@@ -106,7 +108,7 @@ export const mockMenu: MenuItem[] = [
     menuUrl: '/base',
     parentId: null,
     orderNum: 0,
-    icon: 'fa-location-arrow',
+    icon: 'Navigation',
     perms: null,
     type: 1,
     createTime: '2025-03-26T06:39:12',
@@ -163,7 +165,7 @@ export const mockMenu: MenuItem[] = [
     menuUrl: '/appointment',
     parentId: null,
     orderNum: 0,
-    icon: 'fa-calendar',
+    icon: 'Calendar',
     perms: null,
     type: 2,
     createTime: '2025-03-26T06:39:58',
@@ -177,7 +179,7 @@ export const mockMenu: MenuItem[] = [
     menuUrl: '/message',
     parentId: null,
     orderNum: 0,
-    icon: 'fa-commenting',
+    icon: 'MessageSquare',
     perms: null,
     type: 2,
     createTime: '2025-03-26T06:40:20',
@@ -191,7 +193,7 @@ export const mockMenu: MenuItem[] = [
     menuUrl: '/notice',
     parentId: null,
     orderNum: 0,
-    icon: 'fa-file',
+    icon: 'FileText',
     perms: null,
     type: 2,
     createTime: '2025-03-26T06:40:44',
@@ -205,7 +207,7 @@ export const mockMenu: MenuItem[] = [
     menuUrl: '/agreement',
     parentId: null,
     orderNum: 0,
-    icon: 'fa-info-circle',
+    icon: 'Info',
     perms: null,
     type: 2,
     createTime: '2025-11-12T03:26:22',

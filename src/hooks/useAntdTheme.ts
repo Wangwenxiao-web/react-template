@@ -1,106 +1,272 @@
-import type { ThemeConfig } from 'antd'
+import { useMemo } from 'react'
+import { theme } from 'antd'
+import type { ConfigProviderProps } from 'antd'
+import { createStyles } from 'antd-style'
+import clsx from 'clsx'
 
 export type SemanticColorToken =
+  | 'primary'
+  | 'primary-hover'
+  | 'primary-active'
   | 'background'
   | 'foreground'
-  | 'card'
-  | 'card-foreground'
-  | 'primary'
-  | 'primary-foreground'
-  | 'muted'
-  | 'muted-foreground'
-  | 'border'
-  | 'ring'
+  | 'sidebar'
   | 'sidebar-hover'
+  | 'sidebar-active'
+  | 'border'
+  | 'input'
+  | 'ring'
   | 'success'
   | 'success-bg'
+  | 'success-hover'
   | 'warning'
   | 'warning-bg'
+  | 'warning-hover'
   | 'danger'
   | 'danger-bg'
+  | 'danger-hover'
   | 'info'
   | 'info-bg'
+  | 'info-hover'
 
-function readCssColor(token: SemanticColorToken): string {
+const readCssColor = (token: SemanticColorToken): string => {
   return getComputedStyle(document.documentElement).getPropertyValue(`--color-${token}`).trim()
 }
 
-export function useAntdTheme(): ThemeConfig {
-  const background = readCssColor('background')
-  const foreground = readCssColor('foreground')
-  const card = readCssColor('card')
-  const cardForeground = readCssColor('card-foreground')
+const useStyles = createStyles(({ css }) => {
+  return {
+    buttonPrimary: css({
+      backgroundColor: '#18181b',
+      color: '#ffffff',
+      border: '1px solid #18181b',
+      fontWeight: 500,
+      transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+    }),
+    buttonDefault: css({
+      backgroundColor: '#ffffff',
+      color: '#18181b',
+      border: '1px solid #e4e4e7',
+      fontWeight: 500,
+      transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+    }),
+    buttonDanger: css({
+      backgroundColor: '#dc2626',
+      color: '#ffffff',
+      border: '1px solid #dc2626',
+      fontWeight: 500,
+    }),
+    inputRoot: css({
+      borderColor: '#e4e4e7',
+      transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+    }),
+    inputElement: css({
+      color: '#18181b',
+    }),
+    inputError: css({
+      borderColor: '#dc2626',
+    }),
+    selectRoot: css({
+      borderColor: '#e4e4e7',
+    }),
+    selectPopup: css({
+      borderRadius: '8px',
+      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)',
+    }),
+  }
+})
+
+const useAntdTheme = () => {
+  const { styles } = useStyles()
   const primary = readCssColor('primary')
-  const primaryForeground = readCssColor('primary-foreground')
-  const muted = readCssColor('muted')
-  const mutedForeground = readCssColor('muted-foreground')
-  const border = readCssColor('border')
-  const ring = readCssColor('ring')
+  const primaryHover = readCssColor('primary-hover')
+  const primaryActive = readCssColor('primary-active')
+  const background = readCssColor('background')
+  const sidebar = readCssColor('sidebar')
   const sidebarHover = readCssColor('sidebar-hover')
+  const border = readCssColor('border')
   const success = readCssColor('success')
   const successBg = readCssColor('success-bg')
+  const successHover = readCssColor('success-hover')
   const warning = readCssColor('warning')
   const warningBg = readCssColor('warning-bg')
+  const warningHover = readCssColor('warning-hover')
   const danger = readCssColor('danger')
   const dangerBg = readCssColor('danger-bg')
-  const info = readCssColor('info')
-  const infoBg = readCssColor('info-bg')
+  const dangerHover = readCssColor('danger-hover')
 
-  return {
-    token: {
-      colorPrimary: primary,
-      colorSuccess: success,
-      colorWarning: warning,
-      colorError: danger,
-      colorInfo: info,
-      colorLink: primary,
-      colorBgBase: background,
-      colorBgLayout: background,
-      colorBgContainer: card,
-      colorText: foreground,
-      colorTextBase: foreground,
-      colorTextSecondary: mutedForeground,
-      colorBorder: border,
-      colorBorderSecondary: border,
-      colorFillSecondary: muted,
-      colorFillTertiary: muted,
-      colorSuccessBg: successBg,
-      colorWarningBg: warningBg,
-      colorErrorBg: dangerBg,
-      colorInfoBg: infoBg,
-      colorTextLightSolid: primaryForeground,
-      controlOutline: ring,
-      fontFamily: 'var(--font-sans)',
-      borderRadius: 12,
-      boxShadow: 'none',
-    },
-    components: {
-      Button: {
-        defaultBorderColor: border,
-        defaultColor: cardForeground,
-        defaultBg: card,
-        primaryShadow: 'none',
-        dangerShadow: 'none',
+  return useMemo<ConfigProviderProps>(
+    () => ({
+      theme: {
+        algorithm: theme.defaultAlgorithm,
+        token: {
+          colorPrimary: primary,
+          colorSuccess: success,
+          colorWarning: warning,
+          colorError: danger,
+          colorInfo: primary,
+          colorTextBase: primary,
+          colorBgBase: background,
+          colorPrimaryBg: '#f5f5f5',
+          colorPrimaryBgHover: '#e5e5e5',
+          colorPrimaryBorder: '#d4d4d4',
+          colorPrimaryBorderHover: '#a3a3a3',
+          colorPrimaryHover: primaryHover,
+          colorPrimaryActive: primaryActive,
+          colorPrimaryText: primary,
+          colorPrimaryTextHover: primaryHover,
+          colorPrimaryTextActive: primaryActive,
+          colorSuccessBg: successBg,
+          colorSuccessBgHover: '#dcfce7',
+          colorSuccessBorder: '#bbf7d0',
+          colorSuccessBorderHover: '#86efac',
+          colorSuccessHover: successHover,
+          colorSuccessActive: '#15803d',
+          colorSuccessText: '#16a34a',
+          colorSuccessTextHover: '#16a34a',
+          colorSuccessTextActive: '#15803d',
+          colorWarningBg: warningBg,
+          colorWarningBgHover: '#fed7aa',
+          colorWarningBorder: '#fdba74',
+          colorWarningBorderHover: '#fb923c',
+          colorWarningHover: warningHover,
+          colorWarningActive: '#c2410c',
+          colorWarningText: '#ea580c',
+          colorWarningTextHover: '#ea580c',
+          colorWarningTextActive: '#c2410c',
+          colorErrorBg: dangerBg,
+          colorErrorBgHover: '#fecaca',
+          colorErrorBorder: '#fca5a5',
+          colorErrorBorderHover: '#f87171',
+          colorErrorHover: dangerHover,
+          colorErrorActive: '#b91c1c',
+          colorErrorText: '#dc2626',
+          colorErrorTextHover: '#dc2626',
+          colorErrorTextActive: '#b91c1c',
+          colorInfoBg: '#f5f5f5',
+          colorInfoBgHover: '#e5e5e5',
+          colorInfoBorder: '#d4d4d4',
+          colorInfoBorderHover: '#a3a3a3',
+          colorInfoHover: primaryHover,
+          colorInfoActive: primaryActive,
+          colorInfoText: primary,
+          colorInfoTextHover: primaryHover,
+          colorInfoTextActive: primaryActive,
+          colorText: primary,
+          colorTextSecondary: '#525252',
+          colorTextTertiary: '#737373',
+          colorTextQuaternary: '#a3a3a3',
+          colorTextDisabled: '#a3a3a3',
+          colorBgContainer: background,
+          colorBgElevated: background,
+          colorBgLayout: '#fafafa',
+          colorBgSpotlight: 'rgba(38, 38, 38, 0.85)',
+          colorBgMask: 'rgba(38, 38, 38, 0.45)',
+          colorBorder: '#e5e5e5',
+          colorBorderSecondary: '#f5f5f5',
+          borderRadius: 10,
+          borderRadiusXS: 2,
+          borderRadiusSM: 6,
+          borderRadiusLG: 14,
+          padding: 16,
+          paddingSM: 12,
+          paddingLG: 24,
+          margin: 16,
+          marginSM: 12,
+          marginLG: 24,
+          boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)',
+          boxShadowSecondary:
+            '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)',
+        },
+        components: {
+          Button: {
+            primaryShadow: 'none',
+            defaultShadow: 'none',
+            dangerShadow: 'none',
+            defaultBorderColor: border,
+            defaultColor: '#18181b',
+            defaultBg: background,
+            defaultHoverBg: '#f4f4f5',
+            defaultHoverBorderColor: '#d4d4d8',
+            defaultHoverColor: '#18181b',
+            defaultActiveBg: '#e4e4e7',
+            defaultActiveBorderColor: '#d4d4d8',
+            borderRadius: 6,
+          },
+          Input: {
+            activeShadow: 'none',
+            hoverBorderColor: '#a1a1aa',
+            activeBorderColor: '#18181b',
+            borderRadius: 6,
+          },
+          Select: {
+            optionSelectedBg: '#f4f4f5',
+            optionActiveBg: '#fafafa',
+            optionSelectedFontWeight: 500,
+            borderRadius: 6,
+          },
+          Alert: {
+            borderRadiusLG: 8,
+          },
+          Modal: {
+            borderRadiusLG: 12,
+          },
+          Progress: {
+            defaultColor: '#18181b',
+            remainingColor: '#f4f4f5',
+          },
+          Steps: {
+            iconSize: 32,
+          },
+          Switch: {
+            trackHeight: 24,
+            trackMinWidth: 44,
+            innerMinMargin: 4,
+            innerMaxMargin: 24,
+          },
+          Checkbox: {
+            borderRadiusSM: 4,
+          },
+          Slider: {
+            trackBg: '#f4f4f5',
+            trackHoverBg: '#e4e4e7',
+            handleSize: 18,
+            handleSizeHover: 20,
+            railSize: 6,
+          },
+          ColorPicker: {
+            borderRadius: 6,
+          },
+          Menu: {
+            darkPopupBg: sidebar,
+            darkItemBg: sidebar,
+            darkSubMenuItemBg: sidebar,
+            darkItemHoverBg: sidebarHover,
+          },
+        },
       },
-      Card: {
-        colorBgContainer: card,
-        colorTextHeading: foreground,
-        colorTextDescription: mutedForeground,
+      button: {
+        classNames: ({ props }) => ({
+          root: clsx(
+            props.type === 'primary' && styles.buttonPrimary,
+            props.type === 'default' && styles.buttonDefault,
+            props.danger && styles.buttonDanger,
+          ),
+        }),
       },
-      Input: {
-        activeBorderColor: primary,
-        hoverBorderColor: primary,
-        activeShadow: `0 0 0 1px ${primary}`,
+      input: {
+        classNames: ({ props }) => ({
+          root: clsx(styles.inputRoot, props.status === 'error' && styles.inputError),
+          input: styles.inputElement,
+        }),
       },
-      Alert: {
-        withDescriptionPadding: 16,
+      select: {
+        classNames: {
+          root: styles.selectRoot,
+        },
       },
-      Menu: {
-        darkPopupBg: primary,
-        darkItemBg: primary,
-        darkSubMenuItemBg: primary,
-        darkItemHoverBg: sidebarHover,
-      },
-    },
-  }
+    }),
+    [styles],
+  )
 }
+
+export default useAntdTheme

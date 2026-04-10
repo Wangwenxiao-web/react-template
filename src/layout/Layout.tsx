@@ -1,17 +1,17 @@
 import type { JSX } from 'react'
 import { ConfigProvider } from 'antd'
 
-import { useAntdTheme } from '@/hooks/useAntdTheme'
+import useAntdTheme from '@/hooks/useAntdTheme'
 
 import BaseHeader from '@/layout/BaseHeader'
 import BaseMain from '@/layout/BaseMain'
 import BaseSide from '@/layout/BaseSide'
 
 function Layout(): JSX.Element {
-  const theme = useAntdTheme()
+  const configProps = useAntdTheme()
 
   return (
-    <ConfigProvider theme={theme}>
+    <ConfigProvider {...configProps}>
       <div className="bg-background text-foreground flex h-screen">
         <BaseSide />
 

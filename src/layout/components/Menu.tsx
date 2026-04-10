@@ -5,10 +5,9 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { Menu } from 'antd'
 import type { MenuProps } from 'antd'
 
+import { Icon } from '@/components'
 import { mockMenu } from '@/constants'
 import type { MenuItem } from '@/types'
-
-import { renderMenuIcon } from './IconRegistry'
 
 function AntdMenu(): JSX.Element {
   const navigate = useNavigate()
@@ -32,14 +31,14 @@ function AntdMenu(): JSX.Element {
         return {
           key: menu.menuUrl,
           label: menu.menuName,
-          icon: renderMenuIcon(menu.icon, { className: 'h-3.5 w-3.5' }),
+          icon: <Icon name={menu.icon} className="h-3.5 w-3.5" />,
           children: renderMenuItems(menu.children),
         }
       }
       return {
         key: menu.menuUrl,
         label: menu.menuName,
-        icon: renderMenuIcon(menu.icon, { className: 'h-3.5 w-3.5' }),
+        icon: <Icon name={menu.icon} className="h-3.5 w-3.5" />,
       }
     })
   }
