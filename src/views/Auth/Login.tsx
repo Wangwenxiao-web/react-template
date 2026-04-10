@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Button, Form, Input } from 'antd'
 
+import { login } from '@/api/modules/auth'
 import useMessage from '@/hooks/useMessage'
 import { useAuthStore } from '@/stores/auth'
 
@@ -20,14 +21,15 @@ function LoginPage(): JSX.Element {
   const onFinish = async ({ username, password }: LoginFields) => {
     setLoading(true)
     try {
-      // mock 登录：固定账号密码
-      if (username === 'admin' && password === '123456') {
-        message.success('登录成功')
-        useAuthStore.getState().login('mock-token')
+      const response = await login({ username, password })
+
+      if (response.success) {
+        message.success(response.message)
+        useAuthStore.getState().login(response.data.token)
         const redirect = searchParams.get('redirect')
         navigate(redirect ?? '/', { replace: true })
       } else {
-        message.error('用户名或密码错误')
+        message.error(response.message)
       }
     } finally {
       setLoading(false)

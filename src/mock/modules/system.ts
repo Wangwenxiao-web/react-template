@@ -3,7 +3,7 @@ import { mockMenu } from '@/mock/data/system'
 
 export const systemMock: MockItem[] = [
   {
-    url: '/api/system/menus',
+    url: '/system/menus',
     method: 'get',
     handler: () => ({
       code: 200,

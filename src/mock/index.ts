@@ -1,7 +1,8 @@
 import type { AxiosRequestConfig } from 'axios'
+import { authMock } from './modules/auth'
 import { systemMock } from './modules/system'
 
-const mockList: MockItem[] = [...systemMock]
+const mockList: MockItem[] = [...authMock, ...systemMock]
 
 function normalizeUrl(url: string) {
   return url.split('?')[0]
