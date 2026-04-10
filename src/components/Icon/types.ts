@@ -1,7 +1,7 @@
-import * as LucideIcons from 'lucide-react'
 import type { LucideProps } from 'lucide-react'
+import type { IconName as LucideIconName } from 'lucide-react/dynamic'
 
-export type IconName = keyof typeof LucideIcons
+export type IconName = LucideIconName
 
 export interface IconProps extends Omit<LucideProps, 'name'> {
   name: IconName | null // 图标名称，允许 null

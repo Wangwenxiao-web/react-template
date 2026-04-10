@@ -1,17 +1,29 @@
 import React from 'react'
 
-import * as LucideIcons from 'lucide-react'
-import type { LucideProps } from 'lucide-react'
+import { Circle } from 'lucide-react'
+import { DynamicIcon } from 'lucide-react/dynamic'
 
 import type { IconProps } from './types'
 
 function Icon({ name, ...rest }: IconProps): React.JSX.Element | null {
-  const { className } = rest
   if (!name) return null
-  const LucideIcon = LucideIcons[name] as React.ComponentType<LucideProps> | undefined
-  if (!LucideIcon) return <>{rest.fallback ? rest.fallback : <LucideIcons.Circle />}</>
+  const { fallback, className, size, strokeWidth, ...iconProps } = rest
+
   return (
-    <LucideIcon className={className} size={rest.size} strokeWidth={rest.strokeWidth} {...rest} />
+    <DynamicIcon
+      name={name}
+      className={className}
+      size={size}
+      strokeWidth={strokeWidth}
+      fallback={() =>
+        fallback ? (
+          <>{fallback}</>
+        ) : (
+          <Circle className={className} size={size} strokeWidth={strokeWidth} />
+        )
+      }
+      {...iconProps}
+    />
   )
 }
 
